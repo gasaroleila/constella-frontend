@@ -1,0 +1,1240 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constella — Dashboard</title>
+<style>
+:root {
+  --space: #04060F;
+  --space-raised: #0B0E1C;
+  --space-card: #10132A;
+  --space-hover: #161A36;
+  --indigo: #3E43AD;
+  --indigo-bright: #5B60E8;
+  --indigo-soft: rgba(62,67,173,0.15);
+  --indigo-border: rgba(62,67,173,0.3);
+  --green: #34D399;
+  --green-soft: rgba(52,211,153,0.12);
+  --amber: #FBBF24;
+  --amber-soft: rgba(251,191,36,0.12);
+  --rose: #FB7185;
+  --rose-soft: rgba(251,113,133,0.12);
+  --text-primary: rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.55);
+  --text-tertiary: rgba(255,255,255,0.3);
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.12);
+  --canvas-line: rgba(200,204,216,OPACITY);
+  --canvas-label: rgba(200,204,216,0.4);
+  --canvas-center-text: rgba(255,255,255,0.6);
+  --canvas-glow: rgba(62,67,173,0.25);
+  --legend-bg: rgba(4,6,15,0.85);
+  --scrollbar-thumb: rgba(255,255,255,0.1);
+  --font: "Avenir Next", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ─── LIGHT THEME ─── */
+:root[data-theme="light"] {
+  --space: #F5F6FA;
+  --space-raised: #FFFFFF;
+  --space-card: #FFFFFF;
+  --space-hover: #EDEEF4;
+  --indigo-soft: rgba(62,67,173,0.08);
+  --indigo-border: rgba(62,67,173,0.2);
+  --green: #059669;
+  --green-soft: rgba(5,150,105,0.08);
+  --amber: #D97706;
+  --amber-soft: rgba(217,119,6,0.08);
+  --rose: #E11D48;
+  --rose-soft: rgba(225,29,72,0.08);
+  --text-primary: #1A1A2E;
+  --text-secondary: #6B6E8A;
+  --text-tertiary: #9CA0B8;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.14);
+  --canvas-label: rgba(80,85,120,0.6);
+  --canvas-center-text: rgba(30,30,60,0.7);
+  --canvas-glow: rgba(62,67,173,0.15);
+  --legend-bg: rgba(255,255,255,0.9);
+  --scrollbar-thumb: rgba(0,0,0,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: var(--space);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  height: 100vh; overflow: hidden;
+  display: flex;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 220px; height: 100vh; flex-shrink: 0;
+  background: var(--space);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 20px 0;
+}
+.sidebar-logo {
+  font-size: 19px; font-weight: 700; color: var(--text-primary);
+  padding: 0 20px; margin-bottom: 32px; letter-spacing: -0.5px;
+}
+.sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 0 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s; border: none;
+  background: transparent; width: 100%; text-align: left;
+  font-family: var(--font);
+}
+.nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+.nav-item.active {
+  background: var(--indigo-soft); color: var(--indigo-bright);
+}
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.6; }
+.nav-item.active svg { opacity: 1; }
+.nav-divider { height: 1px; background: var(--border); margin: 12px 20px; }
+.sidebar-bottom {
+  padding: 16px 20px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--indigo), var(--indigo-bright));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.avatar-info { flex: 1; min-width: 0; }
+.avatar-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.avatar-school { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ─── MAIN ─── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar {
+  height: 56px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; border-bottom: 1px solid var(--border);
+}
+.topbar-title { font-size: 16px; font-weight: 600; }
+.topbar-actions { display: flex; align-items: center; gap: 16px; }
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 12px;
+}
+.search-box input {
+  background: transparent; border: none; outline: none;
+  color: var(--text-primary); font-size: 13px; width: 180px;
+  font-family: var(--font);
+}
+.search-box input::placeholder { color: var(--text-tertiary); }
+.search-box svg { width: 15px; height: 15px; opacity: 0.3; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+  background: transparent; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-secondary); transition: all 0.15s;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.04); border-color: var(--border-hover); }
+
+.content { flex: 1; overflow-y: auto; padding: 28px; }
+
+/* ─── PAGES ─── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ─── DASHBOARD PAGE ─── */
+.greeting { margin-bottom: 28px; }
+.greeting h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+.greeting p { font-size: 14px; color: var(--text-secondary); }
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--space-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+}
+.stat-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.stat-card-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.stat-card-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-card-icon svg { width: 16px; height: 16px; }
+.stat-card-icon.indigo { background: var(--indigo-soft); }
+.stat-card-icon.indigo svg { stroke: var(--indigo-bright); }
+.stat-card-icon.green { background: var(--green-soft); }
+.stat-card-icon.green svg { stroke: var(--green); }
+.stat-card-icon.amber { background: var(--amber-soft); }
+.stat-card-icon.amber svg { stroke: var(--amber); }
+.stat-card-icon.rose { background: var(--rose-soft); }
+.stat-card-icon.rose svg { stroke: var(--rose); }
+.stat-card-value {
+  font-size: 28px; font-weight: 700; letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card-change {
+  font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px;
+}
+.stat-card-change.up { color: var(--green); }
+.stat-card-change.neutral { color: var(--text-tertiary); }
+
+.dashboard-grid {
+  display: grid; grid-template-columns: 1.6fr 1fr;
+  gap: 14px;
+}
+.card {
+  background: var(--space-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.card-title { font-size: 14px; font-weight: 600; }
+.card-action {
+  font-size: 12px; color: var(--indigo-bright); cursor: pointer;
+  background: none; border: none; font-family: var(--font); font-weight: 500;
+}
+.card-action:hover { text-decoration: underline; }
+.card-body { padding: 16px 20px; }
+
+/* Constellation preview */
+.constellation-preview { position: relative; height: 240px; }
+#dash-constellation { width: 100%; height: 100%; display: block; }
+
+/* Saved paths list */
+.path-list { display: flex; flex-direction: column; gap: 2px; }
+.path-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.path-item:last-child { border: none; }
+.path-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.path-info { flex: 1; min-width: 0; }
+.path-name { font-size: 13px; font-weight: 600; }
+.path-detail { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.path-match {
+  font-size: 12px; font-weight: 600; padding: 3px 8px;
+  border-radius: 4px; flex-shrink: 0;
+}
+
+/* Recent activity */
+.activity-list { display: flex; flex-direction: column; gap: 0; }
+.activity-item {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.activity-item:last-child { border: none; }
+.activity-dot-line { display: flex; flex-direction: column; align-items: center; }
+.activity-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--indigo); flex-shrink: 0; margin-top: 4px;
+}
+.activity-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+.activity-text { color: var(--text-secondary); line-height: 1.5; }
+.activity-text strong { color: var(--text-primary); font-weight: 600; }
+.activity-time { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+
+/* Quick actions */
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quick-action {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--border); background: transparent;
+  transition: all 0.15s; font-family: var(--font);
+  color: var(--text-primary); text-align: left;
+}
+.quick-action:hover { background: rgba(255,255,255,0.03); border-color: var(--border-hover); }
+.quick-action-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.quick-action-icon svg { width: 18px; height: 18px; }
+.quick-action-label { font-size: 13px; font-weight: 600; }
+.quick-action-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+/* ─── EXPLORE PAGE ─── */
+.explore-layout { display: flex; gap: 0; height: calc(100vh - 56px); margin: -28px; }
+.explore-sidebar {
+  width: 300px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.explore-sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+.explore-sidebar-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.explore-sidebar-header p { font-size: 12px; color: var(--text-secondary); }
+
+.explore-mode-toggle {
+  display: flex; margin: 16px 20px 0; gap: 0;
+  background: rgba(255,255,255,0.04); border-radius: 8px;
+  padding: 3px; border: 1px solid var(--border);
+}
+.mode-btn {
+  flex: 1; padding: 7px 0; border-radius: 6px;
+  font-size: 12px; font-weight: 600; text-align: center;
+  cursor: pointer; transition: all 0.15s;
+  background: transparent; color: var(--text-secondary);
+  border: none; font-family: var(--font);
+}
+.mode-btn.active { background: var(--indigo); color: white; }
+
+.explore-filters { padding: 16px 20px; flex: 1; overflow-y: auto; }
+.filter-group { margin-bottom: 18px; }
+.filter-label {
+  font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+.filter-input {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text-primary); font-size: 13px;
+  font-family: var(--font); outline: none;
+  transition: border-color 0.15s;
+}
+.filter-input:focus { border-color: var(--indigo); }
+.filter-input::placeholder { color: var(--text-tertiary); }
+select.filter-input { appearance: none; cursor: pointer; }
+.filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-tag {
+  font-size: 12px; padding: 5px 10px; border-radius: 6px;
+  cursor: pointer; transition: all 0.15s;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text-secondary); font-family: var(--font);
+}
+.filter-tag.active { background: var(--indigo-soft); border-color: var(--indigo-border); color: var(--indigo-bright); }
+.filter-tag:hover { border-color: var(--border-hover); }
+.explore-btn {
+  margin: 0 20px 20px; padding: 10px; border-radius: 8px;
+  background: var(--indigo); color: white; border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: var(--font); transition: background 0.15s;
+}
+.explore-btn:hover { background: var(--indigo-bright); }
+
+.explore-canvas-area { flex: 1; position: relative; overflow: hidden; }
+#explore-constellation { width: 100%; height: 100%; display: block; }
+.explore-legend {
+  position: absolute; bottom: 20px; left: 20px;
+  background: var(--legend-bg); backdrop-filter: blur(12px);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 18px; font-size: 12px;
+}
+.legend-title { font-weight: 700; margin-bottom: 8px; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.legend-items { display: flex; flex-direction: column; gap: 6px; }
+.legend-item { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Alumni detail panel (slides in from right) */
+.detail-panel {
+  width: 340px; flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--space-raised);
+  overflow-y: auto; padding: 0;
+}
+.detail-header {
+  padding: 20px; border-bottom: 1px solid var(--border);
+}
+.detail-close {
+  font-size: 12px; color: var(--text-tertiary); cursor: pointer;
+  background: none; border: none; font-family: var(--font);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 4px;
+}
+.detail-close:hover { color: var(--text-secondary); }
+.detail-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.detail-badge {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  font-weight: 600;
+}
+.detail-badge.match { background: var(--indigo-soft); color: var(--indigo-bright); }
+.detail-badge.year { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
+.detail-major { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.detail-outcome { font-size: 13px; color: var(--text-secondary); }
+
+.detail-timeline { padding: 20px; }
+.detail-timeline-title {
+  font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px;
+}
+.tl-item { display: flex; gap: 14px; padding-bottom: 16px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 16px; }
+.tl-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(200,204,216,0.2); border: 2px solid rgba(200,204,216,0.5);
+  flex-shrink: 0; z-index: 1;
+}
+.tl-dot.pivot {
+  width: 10px; height: 10px; border-radius: 2px;
+  transform: rotate(45deg); background: var(--indigo);
+  border-color: var(--indigo-bright);
+}
+.tl-stem { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+.tl-content { flex: 1; }
+.tl-semester { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.tl-semester.pivot-label { color: var(--indigo-bright); }
+.tl-courses { display: flex; flex-wrap: wrap; gap: 4px; }
+.tl-pill {
+  font-size: 11px; padding: 3px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.05); color: var(--text-secondary);
+}
+.tl-pill.new { background: var(--indigo-soft); color: var(--indigo-bright); }
+.tl-pill.dropped { text-decoration: line-through; opacity: 0.4; }
+
+.detail-activities {
+  padding: 16px 20px; border-top: 1px solid var(--border);
+}
+.detail-activities-title {
+  font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
+}
+.act-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.act-pill {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  background: rgba(255,255,255,0.04); color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ─── TRANSITION PAGE ─── */
+.transition-layout { display: flex; flex-direction: column; gap: 20px; }
+.transition-input-card {
+  background: var(--space-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+}
+.transition-input-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.transition-input-card > p { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+.pivot-form {
+  display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+}
+.pivot-field { display: flex; flex-direction: column; gap: 6px; }
+.pivot-field label {
+  font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.pivot-field input, .pivot-field select {
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text-primary); font-size: 14px;
+  font-family: var(--font); outline: none; min-width: 200px;
+}
+.pivot-field input:focus, .pivot-field select:focus { border-color: var(--indigo); }
+.pivot-arrow {
+  font-size: 20px; color: var(--indigo-bright); font-weight: 700;
+  padding-bottom: 10px;
+}
+.simulate-btn {
+  padding: 10px 24px; border-radius: 8px;
+  background: var(--indigo); color: white; border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: var(--font); transition: background 0.15s;
+  margin-bottom: 0;
+}
+.simulate-btn:hover { background: var(--indigo-bright); }
+
+.transition-summary {
+  background: var(--indigo-soft); border: 1px solid var(--indigo-border);
+  border-radius: 10px; padding: 14px 18px;
+  font-size: 14px; color: var(--text-primary);
+  display: flex; align-items: center; gap: 10px;
+}
+.transition-summary-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--indigo); display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.transition-summary-icon svg { width: 16px; height: 16px; stroke: white; }
+
+.transition-results {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px;
+}
+.transition-card {
+  background: var(--space-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.transition-card:hover { border-color: var(--border-hover); }
+.transition-card.top { border-color: var(--indigo-border); }
+.transition-card-badge {
+  font-size: 11px; font-weight: 700; padding: 6px 16px;
+  background: var(--indigo-soft); color: var(--indigo-bright);
+  display: inline-block;
+}
+.transition-card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.transition-card-header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.tc-class { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.tc-match { font-size: 13px; font-weight: 700; color: var(--indigo-bright); }
+.tc-major { font-size: 15px; font-weight: 700; }
+.tc-outcome { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.transition-card-body { padding: 16px 20px; }
+.tc-pre-pivot {
+  font-size: 12px; color: var(--text-tertiary);
+  padding: 8px 12px; border-radius: 6px;
+  background: rgba(255,255,255,0.03); margin-bottom: 12px;
+}
+
+/* ─── LIGHT THEME OVERRIDES ─── */
+:root[data-theme="light"] .nav-item:hover { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .icon-btn:hover { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .quick-action:hover { background: rgba(0,0,0,0.03); }
+:root[data-theme="light"] .search-box { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .explore-mode-toggle { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .filter-input { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .filter-tag { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .pivot-field input,
+:root[data-theme="light"] .pivot-field select { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .tl-pill { background: rgba(0,0,0,0.05); }
+:root[data-theme="light"] .act-pill { background: rgba(0,0,0,0.04); }
+:root[data-theme="light"] .tc-pre-pivot { background: rgba(0,0,0,0.03); }
+:root[data-theme="light"] .detail-badge.year { background: rgba(0,0,0,0.05); }
+:root[data-theme="light"] .tl-dot { background: rgba(100,105,140,0.2); border-color: rgba(100,105,140,0.5); }
+:root[data-theme="light"] .explore-legend { background: var(--legend-bg); backdrop-filter: blur(12px); }
+:root[data-theme="light"] .stat-card,
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .transition-input-card,
+:root[data-theme="light"] .transition-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+:root[data-theme="light"] .sidebar { border-right-color: rgba(0,0,0,0.1); }
+:root[data-theme="light"] .topbar { border-bottom-color: rgba(0,0,0,0.1); }
+:root[data-theme="light"] .detail-panel { border-left-color: rgba(0,0,0,0.1); }
+.theme-toggle { position: relative; }
+.theme-toggle .sun-icon,
+.theme-toggle .moon-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: opacity 0.2s; }
+.theme-toggle .sun-icon { opacity: 0; }
+:root[data-theme="light"] .theme-toggle .sun-icon { opacity: 1; }
+:root[data-theme="light"] .theme-toggle .moon-icon { opacity: 0; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1100px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .explore-sidebar { width: 260px; }
+  .detail-panel { width: 300px; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .stats-row { grid-template-columns: 1fr; }
+  .explore-layout { flex-direction: column; height: auto; }
+  .explore-sidebar { width: 100%; }
+  .explore-canvas-area { height: 400px; }
+  .detail-panel { width: 100%; }
+  .transition-results { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+</style>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">Constella</div>
+  <div class="sidebar-nav">
+    <button class="nav-item active" onclick="showPage('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('explore')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/></svg>
+      Explore
+    </button>
+    <button class="nav-item" onclick="showPage('transition')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 3l4 4-4 4"/><path d="M3 11h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 13H3"/></svg>
+      Transition
+    </button>
+    <div class="nav-divider"></div>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+      Saved Paths
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="avatar">AJ</div>
+    <div class="avatar-info">
+      <div class="avatar-name">Alex Johnson</div>
+      <div class="avatar-school">University of Michigan</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search paths, majors...">
+      </div>
+      <button class="icon-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ DASHBOARD PAGE ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="greeting">
+        <h1>Welcome back, Alex</h1>
+        <p>Here's what Constella has found for you. You have 3 new matches since last week.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Alumni Matches</span>
+            <div class="stat-card-icon indigo"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+          </div>
+          <div class="stat-card-value">47</div>
+          <div class="stat-card-change up">+3 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Clusters Explored</span>
+            <div class="stat-card-icon green"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+          </div>
+          <div class="stat-card-value">5<span style="font-size:16px;color:var(--text-tertiary);font-weight:400"> / 7</span></div>
+          <div class="stat-card-change neutral">2 remaining</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Highest Match</span>
+            <div class="stat-card-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg></div>
+          </div>
+          <div class="stat-card-value">94%</div>
+          <div class="stat-card-change up">Health Policy cluster</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Saved Paths</span>
+            <div class="stat-card-icon rose"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></div>
+          </div>
+          <div class="stat-card-value">8</div>
+          <div class="stat-card-change neutral">3 transitions saved</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <!-- Constellation preview -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <span class="card-title">Your Constellation</span>
+              <button class="card-action" onclick="showPage('explore')">Open Full View</button>
+            </div>
+            <div class="card-body constellation-preview">
+              <canvas id="dash-constellation"></canvas>
+            </div>
+          </div>
+          <!-- Quick actions -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Quick Actions</span>
+            </div>
+            <div class="card-body">
+              <div class="quick-actions">
+                <button class="quick-action" onclick="showPage('explore')">
+                  <div class="quick-action-icon" style="background:var(--indigo-soft)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--indigo-bright)" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div><div class="quick-action-label">Open Explore</div><div class="quick-action-desc">Browse all alumni paths</div></div>
+                </button>
+                <button class="quick-action" onclick="showPage('transition')">
+                  <div class="quick-action-icon" style="background:var(--green-soft)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M17 3l4 4-4 4"/><path d="M3 11h18"/></svg>
+                  </div>
+                  <div><div class="quick-action-label">Simulate a Pivot</div><div class="quick-action-desc">What if you switched?</div></div>
+                </button>
+                <button class="quick-action">
+                  <div class="quick-action-icon" style="background:var(--amber-soft)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </div>
+                  <div><div class="quick-action-label">Update Profile</div><div class="quick-action-desc">Add courses or interests</div></div>
+                </button>
+                <button class="quick-action">
+                  <div class="quick-action-icon" style="background:var(--rose-soft)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                  </div>
+                  <div><div class="quick-action-label">Saved Paths</div><div class="quick-action-desc">Review your bookmarks</div></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Saved paths -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <span class="card-title">Top Matches</span>
+              <button class="card-action">View All</button>
+            </div>
+            <div class="card-body">
+              <div class="path-list">
+                <div class="path-item">
+                  <div class="path-dot" style="background:var(--indigo-bright)"></div>
+                  <div class="path-info">
+                    <div class="path-name">Health Policy Analyst</div>
+                    <div class="path-detail">Biochem + Public Health, Class of 2022</div>
+                  </div>
+                  <div class="path-match" style="background:var(--indigo-soft);color:var(--indigo-bright)">94%</div>
+                </div>
+                <div class="path-item">
+                  <div class="path-dot" style="background:var(--green)"></div>
+                  <div class="path-info">
+                    <div class="path-name">UX Researcher</div>
+                    <div class="path-detail">Psychology + HCI, Class of 2023</div>
+                  </div>
+                  <div class="path-match" style="background:var(--green-soft);color:var(--green)">91%</div>
+                </div>
+                <div class="path-item">
+                  <div class="path-dot" style="background:var(--amber)"></div>
+                  <div class="path-info">
+                    <div class="path-name">Data Scientist</div>
+                    <div class="path-detail">Stats + CS, Class of 2021</div>
+                  </div>
+                  <div class="path-match" style="background:var(--amber-soft);color:var(--amber)">88%</div>
+                </div>
+                <div class="path-item">
+                  <div class="path-dot" style="background:var(--rose)"></div>
+                  <div class="path-info">
+                    <div class="path-name">Biotech Startup Founder</div>
+                    <div class="path-detail">Biology + Business, Class of 2020</div>
+                  </div>
+                  <div class="path-match" style="background:var(--rose-soft);color:var(--rose)">85%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Recent activity -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Recent Activity</span>
+            </div>
+            <div class="card-body">
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-dot-line"><div class="activity-dot"></div><div class="activity-line"></div></div>
+                  <div><div class="activity-text">Explored <strong>Health Policy</strong> cluster</div><div class="activity-time">2 hours ago</div></div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot-line"><div class="activity-dot" style="background:var(--green)"></div><div class="activity-line"></div></div>
+                  <div><div class="activity-text">Simulated <strong>Bio &rarr; Public Health</strong> transition</div><div class="activity-time">Yesterday</div></div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot-line"><div class="activity-dot" style="background:var(--amber)"></div><div class="activity-line"></div></div>
+                  <div><div class="activity-text">Saved path: <strong>UX Researcher</strong> (91% match)</div><div class="activity-time">2 days ago</div></div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot-line"><div class="activity-dot" style="background:rgba(255,255,255,0.15)"></div></div>
+                  <div><div class="activity-text">Updated profile with <strong>3 new courses</strong></div><div class="activity-time">3 days ago</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EXPLORE PAGE ═══ -->
+    <div class="page" id="page-explore">
+      <div class="explore-layout">
+        <div class="explore-sidebar">
+          <div class="explore-sidebar-header">
+            <h2>Explore Paths</h2>
+            <p>Discover alumni who started where you are</p>
+            <div class="explore-mode-toggle">
+              <button class="mode-btn active">Open</button>
+              <button class="mode-btn">Focused</button>
+            </div>
+          </div>
+          <div class="explore-filters">
+            <div class="filter-group">
+              <div class="filter-label">Your Year</div>
+              <input class="filter-input" type="text" value="Sophomore" readonly>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">Interests</div>
+              <div class="filter-tags">
+                <button class="filter-tag active">Biology</button>
+                <button class="filter-tag active">Public Health</button>
+                <button class="filter-tag">Psychology</button>
+                <button class="filter-tag">Data Science</button>
+                <button class="filter-tag">Economics</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">Career Area</div>
+              <input class="filter-input" type="text" placeholder="Any career area">
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">Major Filter</div>
+              <input class="filter-input" type="text" placeholder="Any major">
+            </div>
+          </div>
+          <button class="explore-btn">Explore Constellation</button>
+        </div>
+
+        <div class="explore-canvas-area">
+          <canvas id="explore-constellation"></canvas>
+          <div class="explore-legend">
+            <div class="legend-title">Clusters</div>
+            <div class="legend-items">
+              <div class="legend-item"><div class="legend-dot" style="background:#5B60E8"></div> You</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#34D399"></div> Health Policy (12)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#FBBF24"></div> UX Research (8)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#FB7185"></div> Data Science (11)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#A78BFA"></div> Biotech (6)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#67E8F9"></div> Education (9)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-panel">
+          <div class="detail-header">
+            <button class="detail-close">&larr; Back to constellation</button>
+            <div class="detail-meta">
+              <span class="detail-badge match">94% Match</span>
+              <span class="detail-badge year">Class of 2022</span>
+            </div>
+            <div class="detail-major">Biochemistry + Public Health</div>
+            <div class="detail-outcome">Health Policy Analyst @ State Health Dept</div>
+          </div>
+          <div class="detail-timeline">
+            <div class="detail-timeline-title">Academic Journey</div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester">Freshman Fall</div>
+                <div class="tl-courses"><span class="tl-pill">Bio 101</span><span class="tl-pill">Chem 101</span><span class="tl-pill">Intro Psych</span></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester">Freshman Spring</div>
+                <div class="tl-courses"><span class="tl-pill">Chem 102</span><span class="tl-pill">Physics I</span><span class="tl-pill">Sociology 101</span></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester">Sophomore Fall</div>
+                <div class="tl-courses"><span class="tl-pill">Organic Chem</span><span class="tl-pill new">Intro Public Health</span></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot pivot"></div><div class="tl-stem"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester pivot-label">Sophomore Spring &mdash; PIVOT</div>
+                <div class="tl-courses"><span class="tl-pill new">Health Policy</span><span class="tl-pill new">Epidemiology</span><span class="tl-pill dropped">Physics II</span></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester">Junior Fall</div>
+                <div class="tl-courses"><span class="tl-pill">Biostatistics</span><span class="tl-pill">Community Health</span></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-line"><div class="tl-dot"></div></div>
+              <div class="tl-content">
+                <div class="tl-semester">Senior Year</div>
+                <div class="tl-courses"><span class="tl-pill">Capstone</span><span class="tl-pill">Internship: State Health Dept</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-activities">
+            <div class="detail-activities-title">Activities</div>
+            <div class="act-pills">
+              <span class="act-pill">Global Health Club</span>
+              <span class="act-pill">Public Health Internship</span>
+              <span class="act-pill">Research Assistant</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TRANSITION PAGE ═══ -->
+    <div class="page" id="page-transition">
+      <div class="transition-layout">
+        <div class="transition-input-card">
+          <h2>What If Simulator</h2>
+          <p>Simulate a pivot and see what happened to real alumni who made the same move.</p>
+          <div class="pivot-form">
+            <div class="pivot-field">
+              <label>Currently In</label>
+              <input type="text" value="Economics" readonly>
+            </div>
+            <div class="pivot-arrow">&rarr;</div>
+            <div class="pivot-field">
+              <label>Switch To</label>
+              <input type="text" value="Public Health" readonly>
+            </div>
+            <button class="simulate-btn">Simulate</button>
+          </div>
+        </div>
+
+        <div class="transition-summary">
+          <div class="transition-summary-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M17 3l4 4-4 4"/><path d="M3 11h18"/></svg>
+          </div>
+          <div><strong>12 alumni</strong> switched from Economics to Public Health. Most pivoted between <strong>sophomore and junior year</strong>. Top outcome: Health Policy (5 alumni).</div>
+        </div>
+
+        <div class="transition-results">
+          <!-- Card 1 — Top match -->
+          <div class="transition-card top">
+            <div class="transition-card-badge">Closest Match</div>
+            <div class="transition-card-header">
+              <div class="transition-card-header-row">
+                <span class="tc-class">Class of 2021</span>
+                <span class="tc-match">92% match</span>
+              </div>
+              <div class="tc-major">Economics &rarr; Public Health</div>
+              <div class="tc-outcome">Health Policy Researcher @ WHO</div>
+            </div>
+            <div class="transition-card-body">
+              <div class="tc-pre-pivot">Pre-pivot (4 semesters): Econ 101, Stats, Micro, Macro, Econometrics</div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot pivot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester pivot-label">Junior Fall &mdash; PIVOT</div>
+                  <div class="tl-courses"><span class="tl-pill new">Intro Public Health</span><span class="tl-pill new">Epidemiology</span><span class="tl-pill dropped">Adv. Econometrics</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Junior Spring</div>
+                  <div class="tl-courses"><span class="tl-pill new">Health Policy</span><span class="tl-pill new">Biostatistics</span><span class="tl-pill">Stats II</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Senior Year</div>
+                  <div class="tl-courses"><span class="tl-pill">Community Health</span><span class="tl-pill">Global Health Seminar</span><span class="tl-pill">Capstone: Health Equity</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="transition-card">
+            <div class="transition-card-header">
+              <div class="transition-card-header-row">
+                <span class="tc-class">Class of 2022</span>
+                <span class="tc-match">88% match</span>
+              </div>
+              <div class="tc-major">Economics &rarr; Public Health</div>
+              <div class="tc-outcome">Epidemiologist @ CDC</div>
+            </div>
+            <div class="transition-card-body">
+              <div class="tc-pre-pivot">Pre-pivot (3 semesters): Econ 101, Micro, Stats, Calc II</div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot pivot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester pivot-label">Sophomore Spring &mdash; PIVOT</div>
+                  <div class="tl-courses"><span class="tl-pill new">Public Health 101</span><span class="tl-pill new">Biology for PH</span><span class="tl-pill dropped">Macro II</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Junior Fall</div>
+                  <div class="tl-courses"><span class="tl-pill new">Epidemiology</span><span class="tl-pill new">Biostatistics</span><span class="tl-pill">Applied Stats</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Senior Year</div>
+                  <div class="tl-courses"><span class="tl-pill">Infectious Disease</span><span class="tl-pill">Research Methods</span><span class="tl-pill">CDC Internship</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="transition-card">
+            <div class="transition-card-header">
+              <div class="transition-card-header-row">
+                <span class="tc-class">Class of 2023</span>
+                <span class="tc-match">85% match</span>
+              </div>
+              <div class="tc-major">Economics &rarr; Health Policy</div>
+              <div class="tc-outcome">Policy Analyst @ Brookings Institution</div>
+            </div>
+            <div class="transition-card-body">
+              <div class="tc-pre-pivot">Pre-pivot (5 semesters): Econ 101, Micro, Macro, Econometrics, Game Theory</div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot pivot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester pivot-label">Junior Spring &mdash; PIVOT</div>
+                  <div class="tl-courses"><span class="tl-pill new">Health Economics</span><span class="tl-pill new">Intro Public Health</span><span class="tl-pill">Econometrics II</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Senior Year</div>
+                  <div class="tl-courses"><span class="tl-pill new">Health Policy</span><span class="tl-pill new">Cost-Benefit in Health</span><span class="tl-pill">Senior Thesis</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="transition-card">
+            <div class="transition-card-header">
+              <div class="transition-card-header-row">
+                <span class="tc-class">Class of 2020</span>
+                <span class="tc-match">82% match</span>
+              </div>
+              <div class="tc-major">Economics &rarr; Public Health + Econ</div>
+              <div class="tc-outcome">Health Data Analyst @ McKinsey</div>
+            </div>
+            <div class="transition-card-body">
+              <div class="tc-pre-pivot">Pre-pivot (4 semesters): Econ 101, Micro, Macro, Stats, Calc I-II</div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot pivot"></div><div class="tl-stem"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester pivot-label">Junior Fall &mdash; ADDED MAJOR</div>
+                  <div class="tl-courses"><span class="tl-pill new">Public Health 101</span><span class="tl-pill new">Epidemiology</span><span class="tl-pill">Development Econ</span></div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-line"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                  <div class="tl-semester">Senior Year</div>
+                  <div class="tl-courses"><span class="tl-pill">Health Econ</span><span class="tl-pill">Biostatistics</span><span class="tl-pill">Consulting Practicum</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── THEME TOGGLE ───
+function toggleTheme() {
+  const root = document.documentElement;
+  const isLight = root.getAttribute('data-theme') === 'light';
+  root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('constella-theme', isLight ? 'dark' : 'light');
+  if (dashInstance) { dashInstance.stop(); dashInstance = createConstellation('dash-constellation', { showLabels: true, showCenter: true, connectionDist: 70 }); }
+  if (exploreInstance) { exploreInstance.stop(); initExploreConstellation(); }
+}
+(function() {
+  const saved = localStorage.getItem('constella-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+function isLightTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'light';
+}
+
+// ─── PAGE SWITCHING ───
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  const titles = { dashboard: 'Dashboard', explore: 'Explore Paths', transition: 'Transition Simulator' };
+  document.getElementById('topbar-title').textContent = titles[name] || 'Dashboard';
+
+  if (name === 'explore') {
+    setTimeout(() => initExploreConstellation(), 100);
+  }
+}
+
+// ─── CONSTELLATION RENDERER ───
+function createConstellation(canvasId, config = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const {
+    clusters = [],
+    showLabels = false,
+    showCenter = true,
+    connectionDist = 80,
+    drift = 0.1,
+    clusterColors = {}
+  } = config;
+  let W, H, nodes = [], animId;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function initNodes() {
+    nodes = [];
+    const cx = W / 2, cy = H / 2;
+    if (showCenter) {
+      nodes.push({ x: cx, y: cy, vx: 0, vy: 0, r: 7, color: '#3E43AD', isCenter: true, label: 'You', baseX: cx, baseY: cy });
+    }
+    const defaultClusters = [
+      { label: 'Health Policy', angle: -0.5, dist: 0.3, count: 10, color: '#34D399' },
+      { label: 'UX Research', angle: 0.8, dist: 0.33, count: 7, color: '#FBBF24' },
+      { label: 'Data Science', angle: 2.0, dist: 0.26, count: 11, color: '#FB7185' },
+      { label: 'Biotech', angle: 3.3, dist: 0.35, count: 6, color: '#A78BFA' },
+      { label: 'Education', angle: 4.6, dist: 0.28, count: 8, color: '#67E8F9' },
+    ];
+    const cl = clusters.length ? clusters : defaultClusters;
+    cl.forEach(c => {
+      const clx = cx + Math.cos(c.angle) * Math.min(W, H) * c.dist;
+      const cly = cy + Math.sin(c.angle) * Math.min(W, H) * c.dist;
+      for (let i = 0; i < c.count; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = 15 + Math.random() * 30;
+        const nx = clx + Math.cos(a) * s;
+        const ny = cly + Math.sin(a) * s;
+        nodes.push({
+          x: nx, y: ny, r: 2 + Math.random() * 3,
+          color: c.color || (isLightTheme() ? `rgba(80,85,120,${0.4 + Math.random() * 0.4})` : `rgba(200,204,216,${0.3 + Math.random() * 0.4})`),
+          baseX: nx, baseY: ny, cluster: c.label
+        });
+      }
+      if (showLabels) {
+        nodes.push({ x: clx, y: cly - 40, isLabel: true, label: c.label, color: c.color });
+      }
+    });
+    for (let i = 0; i < 15; i++) {
+      const bgOp = 0.05 + Math.random() * 0.1;
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: 1 + Math.random() * 1, color: isLightTheme() ? `rgba(80,85,120,${bgOp * 1.5})` : `rgba(200,204,216,${bgOp})`,
+        baseX: Math.random() * W, baseY: Math.random() * H, isBg: true
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 0.4;
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].isLabel || nodes[i].isBg) continue;
+      for (let j = i + 1; j < nodes.length; j++) {
+        if (nodes[j].isLabel || nodes[j].isBg) continue;
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < connectionDist) {
+          const op = (1 - dist / connectionDist) * 0.1;
+          const light = isLightTheme();
+          ctx.strokeStyle = (nodes[i].isCenter || nodes[j].isCenter)
+            ? `rgba(91,96,232,${op * 2.5})` : (light ? `rgba(80,85,120,${op * 1.5})` : `rgba(200,204,216,${op})`);
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(n => {
+      if (n.isLabel) {
+        ctx.font = '10px system-ui, sans-serif';
+        ctx.fillStyle = isLightTheme() ? 'rgba(80,85,120,0.6)' : 'rgba(200,204,216,0.4)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y);
+        return;
+      }
+      if (n.baseX !== undefined) {
+        n.x = n.baseX + Math.sin(t * 0.0005 + n.baseY * 0.01) * 5;
+        n.y = n.baseY + Math.cos(t * 0.0004 + n.baseX * 0.01) * 4;
+      }
+      if (n.isCenter) {
+        const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 20);
+        g.addColorStop(0, isLightTheme() ? 'rgba(62,67,173,0.15)' : 'rgba(62,67,173,0.25)'); g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(n.x, n.y, 20, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = typeof n.color === 'string' && n.color.startsWith('rgba') ? 1 : 0.7;
+      ctx.fillStyle = n.color;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      if (n.isCenter && n.label) {
+        ctx.font = '600 10px system-ui, sans-serif';
+        ctx.fillStyle = isLightTheme() ? 'rgba(30,30,60,0.7)' : 'rgba(255,255,255,0.6)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + n.r + 14);
+      }
+    });
+    animId = requestAnimationFrame(draw);
+  }
+
+  function start() { resize(); initNodes(); draw(0); }
+  start();
+  return { start, stop: () => cancelAnimationFrame(animId) };
+}
+
+// Dashboard mini constellation
+let dashInstance = createConstellation('dash-constellation', { showLabels: true, showCenter: true, connectionDist: 70 });
+
+// Explore constellation (initialized when tab opens)
+let exploreInstance = null;
+function initExploreConstellation() {
+  if (exploreInstance) exploreInstance.stop();
+  exploreInstance = createConstellation('explore-constellation', {
+    showLabels: true, showCenter: true, connectionDist: 90, drift: 0.15,
+    clusters: [
+      { label: 'Health Policy', angle: -0.4, dist: 0.28, count: 12, color: '#34D399' },
+      { label: 'UX Research', angle: 0.9, dist: 0.32, count: 8, color: '#FBBF24' },
+      { label: 'Data Science', angle: 1.9, dist: 0.24, count: 11, color: '#FB7185' },
+      { label: 'Biotech', angle: 3.1, dist: 0.33, count: 6, color: '#A78BFA' },
+      { label: 'Education', angle: 4.3, dist: 0.27, count: 9, color: '#67E8F9' },
+      { label: 'Finance', angle: 5.3, dist: 0.3, count: 5, color: '#F97316' },
+      { label: 'Consulting', angle: -1.3, dist: 0.35, count: 4, color: '#E879F9' },
+    ]
+  });
+}
+
+// Mode toggle
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Filter tags
+document.querySelectorAll('.filter-tag').forEach(tag => {
+  tag.addEventListener('click', () => tag.classList.toggle('active'));
+});
+</script>

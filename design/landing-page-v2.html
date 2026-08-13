@@ -1,0 +1,1218 @@
+<meta charset="UTF-8">
+<title>Constella — Landing Page Design</title>
+<style>
+:root {
+  --space: #04060F;
+  --space-mid: #0A0D1A;
+  --indigo: #3E43AD;
+  --indigo-bright: #5B60E8;
+  --indigo-glow: rgba(62, 67, 173, 0.25);
+  --light: #F5F6FA;
+  --white: #FFFFFF;
+  --text-on-dark: rgba(255,255,255,0.9);
+  --text-on-dark-muted: rgba(255,255,255,0.55);
+  --text-on-light: #1A1A2E;
+  --text-on-light-muted: #6B6E8A;
+  --node: #C8CCD8;
+  --node-dim: rgba(200,204,216,0.3);
+  --border-subtle: rgba(255,255,255,0.08);
+  --bg-dark: var(--space);
+  --bg-light: var(--light);
+  --body-bg: var(--space);
+  --font: "Avenir Next", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-light: #0E1125;
+    --text-on-light: rgba(255,255,255,0.9);
+    --text-on-light-muted: rgba(255,255,255,0.55);
+    --border-subtle: rgba(255,255,255,0.08);
+  }
+}
+:root[data-theme="dark"] {
+  --bg-light: #0E1125;
+  --text-on-light: rgba(255,255,255,0.9);
+  --text-on-light-muted: rgba(255,255,255,0.55);
+  --border-subtle: rgba(255,255,255,0.08);
+}
+
+/* ─── LIGHT THEME ─── */
+:root[data-theme="light"] {
+  --space: #FFFFFF;
+  --space-mid: #F5F6FA;
+  --body-bg: #FFFFFF;
+  --bg-dark: #F5F6FA;
+  --bg-light: #FFFFFF;
+  --white: #1A1A2E;
+  --text-on-dark: #1A1A2E;
+  --text-on-dark-muted: #6B6E8A;
+  --text-on-light: #1A1A2E;
+  --text-on-light-muted: #6B6E8A;
+  --node: #6B6E8A;
+  --node-dim: rgba(100,105,140,0.3);
+  --border-subtle: rgba(0,0,0,0.08);
+}
+:root[data-theme="light"] .nav.scrolled {
+  background: rgba(255,255,255,0.9);
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+:root[data-theme="light"] .nav-logo { color: #1A1A2E; }
+:root[data-theme="light"] .nav-links a { color: #6B6E8A; }
+:root[data-theme="light"] .nav-links a:hover { color: #1A1A2E; }
+:root[data-theme="light"] .btn-ghost {
+  color: #1A1A2E; border-color: rgba(0,0,0,0.15);
+}
+:root[data-theme="light"] .btn-ghost:hover {
+  border-color: rgba(0,0,0,0.3); background: rgba(0,0,0,0.03);
+}
+:root[data-theme="light"] .btn-primary { color: #FFFFFF; }
+:root[data-theme="light"] .hero h1 { color: #1A1A2E; }
+:root[data-theme="light"] .hero-trust-avatars span { border-color: #F5F6FA; }
+:root[data-theme="light"] .problem-card {
+  background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.06);
+}
+:root[data-theme="light"] .problem-card h3 { color: #1A1A2E; }
+:root[data-theme="light"] .problem-lead { color: #1A1A2E; }
+:root[data-theme="light"] .feature-visual { background: rgba(0,0,0,0.03); }
+:root[data-theme="light"] .section-dark .feature-visual {
+  border-color: rgba(0,0,0,0.06);
+}
+:root[data-theme="light"] .solution-mockup {
+  background: #1A1A2E; border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+}
+:root[data-theme="light"] .mockup-bar { background: rgba(255,255,255,0.06); border-bottom-color: rgba(255,255,255,0.08); }
+:root[data-theme="light"] .step h3 { color: #1A1A2E; }
+:root[data-theme="light"] .steps::before {
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.08) 80%, transparent);
+}
+:root[data-theme="light"] .step-number {
+  background: rgba(62,67,173,0.08); border-color: rgba(62,67,173,0.2);
+}
+:root[data-theme="light"] .testimonial-card {
+  background: #FFFFFF; border-color: rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+:root[data-theme="light"] .stats-bar { border-color: rgba(0,0,0,0.06); }
+:root[data-theme="light"] .timeline-stem { background: rgba(0,0,0,0.1); }
+:root[data-theme="light"] .sim-card {
+  background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12);
+}
+:root[data-theme="light"] .footer {
+  background: #1A1A2E;
+}
+:root[data-theme="light"] .footer .nav-logo { color: #FFFFFF; }
+
+/* Theme toggle button in nav */
+.nav-theme-toggle {
+  background: transparent; border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,0.7); transition: all 0.2s;
+  position: relative;
+}
+.nav-theme-toggle:hover { border-color: rgba(255,255,255,0.4); }
+.nav-theme-toggle .sun-icon,
+.nav-theme-toggle .moon-icon {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  transition: opacity 0.2s; width: 16px; height: 16px;
+}
+.nav-theme-toggle .sun-icon { opacity: 0; }
+:root[data-theme="light"] .nav-theme-toggle {
+  border-color: rgba(0,0,0,0.15); color: #6B6E8A;
+}
+:root[data-theme="light"] .nav-theme-toggle:hover { border-color: rgba(0,0,0,0.3); }
+:root[data-theme="light"] .nav-theme-toggle .sun-icon { opacity: 1; }
+:root[data-theme="light"] .nav-theme-toggle .moon-icon { opacity: 0; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--body-bg);
+  color: var(--text-on-dark);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  transition: background 0.3s, backdrop-filter 0.3s;
+}
+.nav.scrolled {
+  background: rgba(4,6,15,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.nav-logo {
+  font-size: 22px; font-weight: 700; color: var(--white);
+  letter-spacing: -0.5px;
+}
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px;
+  font-weight: 500; transition: color 0.2s; letter-spacing: 0.2px;
+}
+.nav-links a:hover { color: var(--white); }
+.btn-primary {
+  background: var(--indigo); color: var(--white);
+  border: none; padding: 10px 22px; border-radius: 8px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none; display: inline-flex; align-items: center;
+  font-family: var(--font);
+}
+.btn-primary:hover { background: var(--indigo-bright); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(255,255,255,0.2); padding: 10px 22px;
+  border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; text-decoration: none;
+  display: inline-flex; align-items: center; font-family: var(--font);
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+  background: var(--bg-dark);
+}
+.hero-content {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; max-width: 1280px; margin: 0 auto; width: 100%;
+  align-items: center; position: relative; z-index: 2;
+}
+.hero-text { max-width: 560px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(62,67,173,0.15); border: 1px solid rgba(62,67,173,0.3);
+  border-radius: 100px; padding: 6px 16px; margin-bottom: 28px;
+  font-size: 13px; color: var(--indigo-bright); font-weight: 500;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #4ADE80; flex-shrink: 0;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 56px); font-weight: 700;
+  line-height: 1.08; letter-spacing: -1.5px;
+  color: var(--white); margin-bottom: 20px;
+  text-wrap: balance;
+}
+.hero h1 em {
+  font-style: normal; color: var(--indigo-bright);
+}
+.hero-sub {
+  font-size: 18px; line-height: 1.65; color: var(--text-on-dark-muted);
+  margin-bottom: 36px; max-width: 460px;
+}
+.hero-ctas { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+.hero-ctas .btn-primary { padding: 14px 28px; font-size: 15px; }
+.hero-ctas .btn-ghost { padding: 14px 28px; font-size: 15px; }
+.hero-trust {
+  font-size: 13px; color: var(--text-on-dark-muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-trust-avatars {
+  display: flex;
+}
+.hero-trust-avatars span {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--space); display: block;
+  margin-left: -8px;
+}
+.hero-trust-avatars span:first-child { margin-left: 0; }
+
+.hero-visual {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+#constellation-canvas {
+  width: 100%; height: 500px; display: block;
+}
+
+/* Radial glow behind constellation */
+.hero-visual::before {
+  content: ''; position: absolute;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,67,173,0.2) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+
+/* ─── SECTIONS ─── */
+section { padding: 100px 48px; }
+.section-dark { background: var(--bg-dark); color: var(--text-on-dark); }
+.section-light { background: var(--bg-light); color: var(--text-on-light); }
+.section-inner {
+  max-width: 1120px; margin: 0 auto;
+}
+.section-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--indigo-bright);
+  margin-bottom: 16px;
+}
+.section-headline {
+  font-size: clamp(28px, 3.5vw, 42px); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.8px;
+  margin-bottom: 20px; text-wrap: balance;
+}
+.section-sub {
+  font-size: 17px; line-height: 1.65; max-width: 600px;
+}
+.section-dark .section-sub { color: var(--text-on-dark-muted); }
+.section-light .section-sub { color: var(--text-on-light-muted); }
+
+/* ─── STATS BAR ─── */
+.stats-bar {
+  padding: 48px 48px;
+  background: var(--bg-light);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .stats-bar {
+    border-color: var(--border-subtle);
+  }
+}
+:root[data-theme="dark"] .stats-bar {
+  border-color: var(--border-subtle);
+}
+.stats-inner {
+  max-width: 900px; margin: 0 auto;
+  display: flex; justify-content: center; gap: 64px;
+  flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat-number {
+  font-size: 36px; font-weight: 700; color: var(--indigo);
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  font-size: 14px; color: var(--text-on-light-muted);
+  margin-top: 4px; font-weight: 500;
+}
+
+/* ─── PROBLEM ─── */
+.problem-lead {
+  font-size: clamp(24px, 3vw, 36px); font-weight: 700;
+  line-height: 1.2; letter-spacing: -0.5px;
+  text-align: center; margin-bottom: 56px;
+  color: var(--white); text-wrap: balance;
+  max-width: 700px; margin-left: auto; margin-right: auto;
+}
+.problem-lead mark {
+  background: none; color: var(--indigo-bright);
+}
+.problem-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.problem-card {
+  padding: 32px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+}
+.problem-icon {
+  width: 48px; height: 48px; margin-bottom: 20px;
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  background: rgba(62,67,173,0.1);
+}
+.problem-icon svg { width: 24px; height: 24px; }
+.problem-card h3 {
+  font-size: 18px; font-weight: 700; margin-bottom: 10px;
+  color: var(--white); letter-spacing: -0.3px;
+}
+.problem-card p {
+  font-size: 15px; line-height: 1.6; color: var(--text-on-dark-muted);
+}
+
+/* ─── SOLUTION ─── */
+.solution-text { text-align: center; margin-bottom: 56px; }
+.solution-text .section-sub { margin: 0 auto; }
+.solution-mockup {
+  max-width: 960px; margin: 0 auto;
+  background: var(--space);
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05);
+  position: relative;
+}
+.mockup-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.mockup-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.mockup-dot:nth-child(1) { background: #FF5F57; }
+.mockup-dot:nth-child(2) { background: #FEBC2E; }
+.mockup-dot:nth-child(3) { background: #28C840; }
+.mockup-body {
+  padding: 48px; min-height: 380px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+#mockup-canvas { width: 100%; height: 380px; display: block; }
+
+/* ─── FEATURE SECTIONS ─── */
+.feature-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+.feature-grid.reversed { direction: rtl; }
+.feature-grid.reversed > * { direction: ltr; }
+.feature-text { }
+.feature-text .section-headline { margin-bottom: 16px; }
+.feature-text .section-sub { margin-bottom: 24px; }
+.feature-bullets { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.feature-bullets li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 15px; line-height: 1.5;
+}
+.section-dark .feature-bullets li { color: var(--text-on-dark-muted); }
+.section-light .feature-bullets li { color: var(--text-on-light-muted); }
+.bullet-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--indigo-bright); flex-shrink: 0;
+  margin-top: 7px;
+}
+.feature-visual {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px; padding: 32px;
+  min-height: 320px; display: flex;
+  align-items: center; justify-content: center;
+}
+.section-light .feature-visual {
+  background: var(--space);
+  border-color: rgba(0,0,0,0.08);
+}
+
+/* Simulator card mockup */
+.sim-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 24px; width: 100%;
+  max-width: 360px;
+}
+.sim-card-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px; font-size: 13px;
+  color: var(--text-on-dark-muted);
+}
+.sim-card-arrow { color: var(--indigo-bright); font-weight: 700; }
+.sim-card-from, .sim-card-to {
+  font-weight: 600; color: var(--white); font-size: 14px;
+}
+.sim-card-stats {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.sim-stat {
+  display: flex; justify-content: space-between;
+  font-size: 13px; padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sim-stat:last-child { border: none; }
+.sim-stat-label { color: var(--text-on-dark-muted); }
+.sim-stat-value { color: var(--white); font-weight: 600; }
+
+/* Timeline mockup */
+.timeline-mockup { width: 100%; max-width: 300px; }
+.timeline-item {
+  display: flex; gap: 16px; position: relative;
+  padding-bottom: 20px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-line {
+  display: flex; flex-direction: column; align-items: center;
+  flex-shrink: 0; width: 20px;
+}
+.timeline-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--node-dim); border: 2px solid var(--node);
+  flex-shrink: 0; z-index: 1;
+}
+.timeline-dot.pivot {
+  width: 12px; height: 12px; border-radius: 2px;
+  transform: rotate(45deg); background: var(--indigo);
+  border-color: var(--indigo-bright);
+}
+.timeline-stem {
+  width: 1px; flex: 1; background: rgba(255,255,255,0.1);
+  margin-top: 4px;
+}
+.timeline-content { flex: 1; padding-top: 0; }
+.timeline-semester {
+  font-size: 12px; font-weight: 600; color: var(--text-on-dark-muted);
+  margin-bottom: 6px;
+}
+.timeline-semester.pivot-label { color: var(--indigo-bright); }
+.timeline-courses { display: flex; flex-wrap: wrap; gap: 4px; }
+.course-pill {
+  font-size: 11px; padding: 3px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.06); color: var(--text-on-dark-muted);
+}
+.course-pill.new {
+  background: rgba(62,67,173,0.2); color: var(--indigo-bright);
+}
+.course-pill.dropped {
+  text-decoration: line-through; opacity: 0.4;
+}
+
+/* ─── STEPS ─── */
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 48px; position: relative;
+}
+.steps::before {
+  content: ''; position: absolute;
+  top: 36px; left: 15%; right: 15%;
+  height: 1px; background: linear-gradient(90deg,
+    transparent, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 80%, transparent);
+}
+.step { text-align: center; position: relative; }
+.step-number {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(62,67,173,0.12); border: 1px solid rgba(62,67,173,0.25);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; position: relative; z-index: 1;
+  font-size: 24px; font-weight: 700; color: var(--indigo-bright);
+}
+.step h3 {
+  font-size: 18px; font-weight: 700; margin-bottom: 8px;
+  color: var(--white);
+}
+.step p {
+  font-size: 14px; line-height: 1.6; color: var(--text-on-dark-muted);
+  max-width: 280px; margin: 0 auto;
+}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.testimonial-card {
+  padding: 28px; border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: var(--white);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .testimonial-card {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border-subtle);
+  }
+}
+:root[data-theme="dark"] .testimonial-card {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border-subtle);
+}
+.testimonial-stars {
+  display: flex; gap: 2px; margin-bottom: 14px;
+  color: #F59E0B; font-size: 14px;
+}
+.testimonial-quote {
+  font-size: 15px; line-height: 1.65;
+  margin-bottom: 18px;
+  color: var(--text-on-light);
+}
+.testimonial-author {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-on-light);
+}
+.testimonial-role {
+  font-size: 12px; color: var(--text-on-light-muted);
+  margin-top: 2px;
+}
+
+/* ─── TRUST BAR ─── */
+.trust-grid {
+  display: flex; justify-content: center;
+  gap: 48px; flex-wrap: wrap;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 500; color: var(--text-on-dark-muted);
+}
+.trust-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(62,67,173,0.1);
+  display: flex; align-items: center; justify-content: center;
+}
+.trust-icon svg { width: 18px; height: 18px; }
+
+/* ─── FINAL CTA ─── */
+.final-cta {
+  text-align: center; position: relative; overflow: hidden;
+  padding: 120px 48px;
+}
+.final-cta .section-headline {
+  font-size: clamp(32px, 4vw, 48px);
+  max-width: 640px; margin: 0 auto 16px;
+}
+.final-cta .section-sub {
+  margin: 0 auto 36px; text-align: center;
+}
+.final-cta .btn-primary {
+  padding: 16px 36px; font-size: 16px;
+}
+.final-cta-glow {
+  position: absolute; width: 600px; height: 600px;
+  border-radius: 50%; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(62,67,173,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  background: #020308; padding: 64px 48px 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+.footer-inner {
+  max-width: 1120px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+.footer-brand-desc {
+  font-size: 14px; color: var(--text-on-dark-muted);
+  line-height: 1.6; margin-top: 12px; max-width: 260px;
+}
+.footer h4 {
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+.footer a {
+  display: block; font-size: 14px; color: var(--text-on-dark-muted);
+  text-decoration: none; padding: 4px 0; transition: color 0.15s;
+}
+.footer a:hover { color: var(--white); }
+.footer-bottom {
+  max-width: 1120px; margin: 40px auto 0;
+  padding-top: 24px; border-top: 1px solid var(--border-subtle);
+  font-size: 13px; color: rgba(255,255,255,0.3);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .nav { padding: 16px 24px; }
+  .nav-links a:not(.btn-primary) { display: none; }
+  section, .hero { padding-left: 24px; padding-right: 24px; }
+  .hero-content { grid-template-columns: 1fr; gap: 40px; }
+  .hero-visual { max-height: 300px; }
+  #constellation-canvas { height: 300px; }
+  .problem-grid, .steps, .testimonials-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; gap: 32px; }
+  .feature-grid.reversed { direction: ltr; }
+  .stats-inner { gap: 32px; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .trust-grid { gap: 24px; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+  .hero-ctas { flex-direction: column; }
+  .hero-ctas .btn-primary, .hero-ctas .btn-ghost { width: 100%; justify-content: center; }
+  .footer-inner { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+</style>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">Constella</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#" style="color: rgba(255,255,255,0.8);">Log In</a>
+    <button class="nav-theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <a href="#" class="btn-primary">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Now open for early access
+      </div>
+      <h1>See what students <em>like you</em> actually did.</h1>
+      <p class="hero-sub">Constella surfaces real alumni paths from your school — the majors they chose, the pivots they made, and where they ended up. Your school's data, your story's possibilities.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary">Get Started — It's Free</a>
+        <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-avatars">
+          <span style="background: #6366F1;"></span>
+          <span style="background: #8B5CF6;"></span>
+          <span style="background: #A78BFA;"></span>
+          <span style="background: #C4B5FD;"></span>
+        </div>
+        Join 500+ students exploring their paths
+      </div>
+    </div>
+    <div class="hero-visual">
+      <canvas id="constellation-canvas"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-number">68+</div>
+      <div class="stat-label">Alumni paths mapped</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Career clusters</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">92%</div>
+      <div class="stat-label">Match accuracy</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4.8</div>
+      <div class="stat-label">Student rating</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section-dark" id="features">
+  <div class="section-inner">
+    <p class="problem-lead">43% of students change their major at least once. <mark>Most do it blind.</mark></p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v4M12 16h.01"/>
+          </svg>
+        </div>
+        <h3>You get generic advice</h3>
+        <p>Your advisor gives the same guidance to everyone. "Explore your options" doesn't help when you don't know what the options are.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5" stroke-linecap="round">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+            <line x1="4" y1="4" x2="20" y2="20"/>
+          </svg>
+        </div>
+        <h3>You can't see real outcomes</h3>
+        <p>What did alumni from YOUR school actually do with a Psych degree? A Bio + CS double major? Nobody shows you that.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5" stroke-linecap="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/>
+            <circle cx="12" cy="12" r="4" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+        <h3>Pivots feel terrifying</h3>
+        <p>Switching majors feels like starting over because you can't see who did it before you — or how it turned out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION OVERVIEW -->
+<section class="section-light">
+  <div class="section-inner">
+    <div class="solution-text">
+      <div class="section-label">How Constella Works</div>
+      <h2 class="section-headline">Your school's alumni paths, turned into a map you can explore.</h2>
+      <p class="section-sub">Every node is a real alumnus. Every cluster is a real career outcome. Click, explore, and discover paths you never knew existed — all from your school's own data.</p>
+    </div>
+    <div class="solution-mockup">
+      <div class="mockup-bar">
+        <span class="mockup-dot"></span>
+        <span class="mockup-dot"></span>
+        <span class="mockup-dot"></span>
+      </div>
+      <div class="mockup-body">
+        <canvas id="mockup-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: COHORT MATCHING -->
+<section class="section-dark">
+  <div class="section-inner">
+    <div class="feature-grid">
+      <div class="feature-text">
+        <div class="section-label">Cohort Matching</div>
+        <h2 class="section-headline">Find alumni who started where you are.</h2>
+        <p class="section-sub">Enter your interests, courses, and year. Constella matches you to alumni who had a similar trajectory — then shows you where they ended up.</p>
+        <ul class="feature-bullets">
+          <li><span class="bullet-dot"></span>Open Explore: See all possible paths, including ones you didn't know existed</li>
+          <li><span class="bullet-dot"></span>Focused Explore: Filter by career area, major, or industry</li>
+          <li><span class="bullet-dot"></span>Every node is a real alumnus. Every cluster is a real outcome.</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <canvas id="cluster-canvas" style="width:100%;height:280px;"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: WHAT IF SIMULATOR -->
+<section class="section-light">
+  <div class="section-inner">
+    <div class="feature-grid reversed">
+      <div class="feature-text">
+        <div class="section-label">What If Simulator</div>
+        <h2 class="section-headline">Simulate the pivot before you make it.</h2>
+        <p class="section-sub">Thinking about switching majors? See exactly what happened to alumni who made the same move — the semester-by-semester playbook.</p>
+        <ul class="feature-bullets">
+          <li><span class="bullet-dot"></span>See the top 5 most relevant alumni transitions</li>
+          <li><span class="bullet-dot"></span>Bridge courses, dropped courses, and exact sequence</li>
+          <li><span class="bullet-dot"></span>Career outcomes post-pivot</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="sim-card">
+          <div class="sim-card-header">
+            <span class="sim-card-from">Economics</span>
+            <span class="sim-card-arrow">&rarr;</span>
+            <span class="sim-card-to">Public Health</span>
+          </div>
+          <div class="sim-card-stats">
+            <div class="sim-stat"><span class="sim-stat-label">Alumni who pivoted</span><span class="sim-stat-value">12</span></div>
+            <div class="sim-stat"><span class="sim-stat-label">Most common timing</span><span class="sim-stat-value">Soph &rarr; Junior</span></div>
+            <div class="sim-stat"><span class="sim-stat-label">Top outcome</span><span class="sim-stat-value">Health Policy</span></div>
+            <div class="sim-stat"><span class="sim-stat-label">Avg. transition</span><span class="sim-stat-value">2 semesters</span></div>
+          </div>
+        </div>
+        <div class="timeline-mockup" style="margin-left: 16px; margin-top: 16px;">
+          <div class="timeline-item">
+            <div class="timeline-line"><div class="timeline-dot pivot"></div><div class="timeline-stem"></div></div>
+            <div class="timeline-content">
+              <div class="timeline-semester pivot-label">Junior Fall — PIVOT</div>
+              <div class="timeline-courses">
+                <span class="course-pill new">Public Health</span>
+                <span class="course-pill new">Epidemiology</span>
+                <span class="course-pill dropped">Adv. Econometrics</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-stem"></div></div>
+            <div class="timeline-content">
+              <div class="timeline-semester">Junior Spring</div>
+              <div class="timeline-courses">
+                <span class="course-pill new">Health Policy</span>
+                <span class="course-pill new">Biostatistics</span>
+                <span class="course-pill">Stats II</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-line"><div class="timeline-dot"></div></div>
+            <div class="timeline-content">
+              <div class="timeline-semester">Senior Fall</div>
+              <div class="timeline-courses">
+                <span class="course-pill">Community Health</span>
+                <span class="course-pill">Global Health</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section-dark" id="how-it-works">
+  <div class="section-inner">
+    <div style="text-align:center; margin-bottom: 56px;">
+      <div class="section-label">Getting Started</div>
+      <h2 class="section-headline">Three steps to clarity.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Enter your profile</h3>
+        <p>Your interests, courses taken so far, and year. Takes about 2 minutes.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Explore the constellation</h3>
+        <p>See matched alumni paths as an interactive star map. Click any cluster to zoom in.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Discover real paths</h3>
+        <p>Click into any alumnus to see their semester-by-semester journey and where they ended up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section-light">
+  <div class="section-inner">
+    <div style="text-align:center; margin-bottom: 48px;">
+      <div class="section-label">Student Stories</div>
+      <h2 class="section-headline">Students are finding their paths.</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-quote">"I was stuck between Bio and Public Health. Constella showed me 8 alumni who made that exact switch — and what happened next."</p>
+        <div class="testimonial-author">Sarah K.</div>
+        <div class="testimonial-role">Junior, Biology</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-quote">"I didn't even know UX Research existed as a career. Now I have a roadmap from someone who started in the same Psych classes I'm in."</p>
+        <div class="testimonial-author">Marcus T.</div>
+        <div class="testimonial-role">Sophomore, Psychology</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-quote">"Seeing real alumni paths made my major decision feel less like a gamble and more like a choice. That's everything when you're undeclared."</p>
+        <div class="testimonial-author">Jordan L.</div>
+        <div class="testimonial-role">Freshman, Undeclared</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST SIGNALS -->
+<section class="section-dark" style="padding: 64px 48px;">
+  <div class="section-inner">
+    <h2 class="section-headline" style="text-align:center; margin-bottom: 40px; font-size: 24px;">Your data stays yours.</h2>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5"><path d="M12 2l7 4v6c0 5.25-3.5 8.5-7 10-3.5-1.5-7-4.75-7-10V6l7-4z"/></svg>
+        </div>
+        FERPA Compliant
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/><line x1="4" y1="4" x2="20" y2="20" stroke-opacity="0.5"/></svg>
+        </div>
+        Anonymized Data
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        No Real Names Shown
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5B60E8" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        School-Verified Data
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section-dark final-cta">
+  <div class="final-cta-glow"></div>
+  <div class="section-inner" style="position:relative; z-index:1;">
+    <h2 class="section-headline">Every alumnus left a map.<br>Now you can follow it.</h2>
+    <p class="section-sub">Start exploring real alumni paths from your school.</p>
+    <a href="#" class="btn-primary">Get Started — It's Free</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="nav-logo">Constella</div>
+      <p class="footer-brand-desc">School-specific career discovery for students. See what alumni like you actually did.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="#">Features</a>
+      <a href="#">How It Works</a>
+      <a href="#">Pricing</a>
+      <a href="#">Changelog</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">FERPA Compliance</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 Constella. All rights reserved.
+  </div>
+</footer>
+
+<script>
+// ─── THEME TOGGLE ───
+function isLightTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'light';
+}
+function toggleTheme() {
+  const isLight = isLightTheme();
+  document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('constella-theme', isLight ? 'dark' : 'light');
+}
+(function() {
+  const saved = localStorage.getItem('constella-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+// ─── NAV SCROLL ───
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ─── CONSTELLATION RENDERER ───
+function createConstellation(canvasId, config = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  const {
+    nodeCount = 60,
+    clusters = [],
+    showLabels = false,
+    showCenter = true,
+    connectionDist = 100,
+    drift = 0.15
+  } = config;
+
+  let W, H, nodes = [], animId;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function initNodes() {
+    nodes = [];
+    const cx = W / 2, cy = H / 2;
+
+    if (showCenter) {
+      nodes.push({
+        x: cx, y: cy, vx: 0, vy: 0,
+        r: 8, color: '#3E43AD', isCenter: true,
+        label: 'You', baseX: cx, baseY: cy
+      });
+    }
+
+    const clusterData = clusters.length ? clusters : [
+      { label: 'Health Policy', angle: -0.5, dist: 0.32, count: 8 },
+      { label: 'UX Research', angle: 0.8, dist: 0.35, count: 6 },
+      { label: 'Data Science', angle: 2.2, dist: 0.28, count: 9 },
+      { label: 'Biotech', angle: 3.5, dist: 0.38, count: 5 },
+      { label: 'Education', angle: 4.8, dist: 0.3, count: 7 },
+    ];
+
+    clusterData.forEach(cl => {
+      const clx = cx + Math.cos(cl.angle) * Math.min(W, H) * cl.dist;
+      const cly = cy + Math.sin(cl.angle) * Math.min(W, H) * cl.dist;
+
+      for (let i = 0; i < cl.count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spread = 20 + Math.random() * 35;
+        const nx = clx + Math.cos(angle) * spread;
+        const ny = cly + Math.sin(angle) * spread;
+        nodes.push({
+          x: nx, y: ny, vx: (Math.random() - 0.5) * drift,
+          vy: (Math.random() - 0.5) * drift,
+          r: 2 + Math.random() * 3,
+          color: `rgba(200,204,216,${0.3 + Math.random() * 0.5})`,
+          isCenter: false, label: null,
+          baseX: nx, baseY: ny,
+          cluster: cl.label
+        });
+      }
+
+      if (showLabels) {
+        nodes.push({
+          x: clx, y: cly - 45, isLabel: true,
+          label: cl.label, cluster: cl.label
+        });
+      }
+    });
+
+    // Add sparse background stars
+    for (let i = 0; i < 20; i++) {
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.05,
+        vy: (Math.random() - 0.5) * 0.05,
+        r: 1 + Math.random() * 1.5,
+        color: `rgba(200,204,216,${0.1 + Math.random() * 0.15})`,
+        isCenter: false, isBg: true,
+        baseX: Math.random() * W, baseY: Math.random() * H
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw connections
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].isLabel || nodes[i].isBg) continue;
+      for (let j = i + 1; j < nodes.length; j++) {
+        if (nodes[j].isLabel || nodes[j].isBg) continue;
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < connectionDist) {
+          const opacity = (1 - dist / connectionDist) * 0.12;
+          const light = isLightTheme();
+          ctx.strokeStyle = nodes[i].isCenter || nodes[j].isCenter
+            ? `rgba(91,96,232,${opacity * 2})`
+            : (light ? `rgba(80,85,120,${opacity * 1.5})` : `rgba(200,204,216,${opacity})`);
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    nodes.forEach(n => {
+      if (n.isLabel) {
+        ctx.font = '11px system-ui, sans-serif';
+        ctx.fillStyle = isLightTheme() ? 'rgba(80,85,120,0.6)' : 'rgba(200,204,216,0.45)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y);
+        return;
+      }
+
+      // Drift
+      if (n.vx !== undefined) {
+        const pulse = Math.sin(t * 0.001 + n.baseX) * 0.3;
+        n.x = n.baseX + Math.sin(t * 0.0005 + n.baseY * 0.01) * 8 + pulse;
+        n.y = n.baseY + Math.cos(t * 0.0004 + n.baseX * 0.01) * 6;
+      }
+
+      // Glow for center
+      if (n.isCenter) {
+        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 24);
+        grad.addColorStop(0, 'rgba(62,67,173,0.3)');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 24, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = n.color;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (n.isCenter && n.label) {
+        ctx.font = '600 11px system-ui, sans-serif';
+        ctx.fillStyle = isLightTheme() ? 'rgba(30,30,60,0.7)' : 'rgba(255,255,255,0.7)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + n.r + 16);
+      }
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  function start() {
+    resize();
+    initNodes();
+    draw(0);
+  }
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(animId);
+    start();
+  });
+
+  start();
+}
+
+// Hero constellation
+createConstellation('constellation-canvas', {
+  nodeCount: 60, showLabels: true, showCenter: true,
+  connectionDist: 90, drift: 0.2
+});
+
+// Mockup constellation (solution section)
+createConstellation('mockup-canvas', {
+  nodeCount: 80, showLabels: true, showCenter: true,
+  connectionDist: 80, drift: 0.1,
+  clusters: [
+    { label: 'Health Policy', angle: -0.4, dist: 0.3, count: 10 },
+    { label: 'UX Research', angle: 1.0, dist: 0.33, count: 7 },
+    { label: 'Data Science', angle: 2.0, dist: 0.25, count: 11 },
+    { label: 'Biotech Startups', angle: 3.2, dist: 0.35, count: 6 },
+    { label: 'Education', angle: 4.5, dist: 0.28, count: 8 },
+    { label: 'Finance', angle: 5.5, dist: 0.32, count: 5 },
+    { label: 'Consulting', angle: -1.2, dist: 0.36, count: 4 },
+  ]
+});
+
+// Cluster canvas (feature section)
+createConstellation('cluster-canvas', {
+  nodeCount: 30, showLabels: false, showCenter: true,
+  connectionDist: 70, drift: 0.15,
+  clusters: [
+    { label: '', angle: 0.3, dist: 0.25, count: 12 },
+    { label: '', angle: 2.5, dist: 0.3, count: 8 },
+    { label: '', angle: 4.5, dist: 0.28, count: 6 },
+  ]
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>

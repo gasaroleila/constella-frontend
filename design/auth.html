@@ -1,0 +1,777 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constella — Sign In</title>
+<style>
+:root {
+  --space: #04060F;
+  --space-raised: #0B0E1C;
+  --space-card: #10132A;
+  --space-hover: #161A36;
+  --indigo: #3E43AD;
+  --indigo-bright: #5B60E8;
+  --indigo-soft: rgba(62,67,173,0.15);
+  --indigo-border: rgba(62,67,173,0.3);
+  --green: #34D399;
+  --rose: #FB7185;
+  --text-primary: rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.55);
+  --text-tertiary: rgba(255,255,255,0.3);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.14);
+  --input-bg: rgba(255,255,255,0.04);
+  --divider-text: rgba(255,255,255,0.3);
+  --social-bg: rgba(255,255,255,0.04);
+  --social-border: rgba(255,255,255,0.1);
+  --social-hover: rgba(255,255,255,0.08);
+  --error-bg: rgba(251,113,133,0.08);
+  --visual-bg: #080B18;
+  --font: "Avenir Next", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root[data-theme="light"] {
+  --space: #F5F6FA;
+  --space-raised: #FFFFFF;
+  --space-card: #FFFFFF;
+  --space-hover: #EDEEF4;
+  --indigo-soft: rgba(62,67,173,0.08);
+  --indigo-border: rgba(62,67,173,0.2);
+  --green: #059669;
+  --rose: #E11D48;
+  --text-primary: #1A1A2E;
+  --text-secondary: #6B6E8A;
+  --text-tertiary: #9CA0B8;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.14);
+  --input-bg: rgba(0,0,0,0.03);
+  --divider-text: rgba(0,0,0,0.3);
+  --social-bg: rgba(0,0,0,0.02);
+  --social-border: rgba(0,0,0,0.1);
+  --social-hover: rgba(0,0,0,0.05);
+  --error-bg: rgba(225,29,72,0.06);
+  --visual-bg: #E8EAF2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--space);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ─── LAYOUT ─── */
+.auth-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── FORM PANEL ─── */
+.form-panel {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  background: var(--space-raised);
+  position: relative;
+  overflow-y: auto;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 36px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.theme-toggle {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-secondary);
+  transition: all 0.15s; position: relative;
+}
+.theme-toggle:hover { background: var(--input-bg); border-color: var(--border-hover); }
+.theme-toggle .sun-icon,
+.theme-toggle .moon-icon {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s; width: 16px; height: 16px;
+}
+.theme-toggle .sun-icon { opacity: 0; }
+:root[data-theme="light"] .theme-toggle .sun-icon { opacity: 1; }
+:root[data-theme="light"] .theme-toggle .moon-icon { opacity: 0; }
+
+.form-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 36px;
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-body h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  margin-bottom: 6px;
+}
+
+.form-body .subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+/* ─── MODE TOGGLE ─── */
+.mode-toggle {
+  display: flex;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  font-family: var(--font);
+}
+
+.mode-btn.active {
+  background: var(--indigo);
+  color: white;
+  box-shadow: 0 2px 8px rgba(62,67,173,0.3);
+}
+
+/* ─── SOCIAL BUTTONS ─── */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--social-border);
+  background: var(--social-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.social-btn:hover {
+  background: var(--social-hover);
+  border-color: var(--border-hover);
+}
+
+.social-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider span {
+  font-size: 12px;
+  color: var(--divider-text);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+/* ─── FORM FIELDS ─── */
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.field input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus {
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px var(--indigo-soft);
+}
+
+.field input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field { flex: 1; }
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle:hover { color: var(--text-secondary); }
+
+.forgot-link {
+  font-size: 13px;
+  color: var(--indigo-bright);
+  text-decoration: none;
+  font-weight: 500;
+  align-self: flex-end;
+  margin-top: -8px;
+}
+
+.forgot-link:hover { text-decoration: underline; }
+
+/* ─── SUBMIT ─── */
+.submit-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  background: var(--indigo);
+  color: white;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-bottom: 16px;
+}
+
+.submit-btn:hover {
+  background: var(--indigo-bright);
+  transform: translateY(-1px);
+}
+
+.submit-btn:active { transform: translateY(0); }
+
+/* ─── TERMS ─── */
+.terms {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.terms a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.terms a:hover { color: var(--text-primary); }
+
+/* ─── FORM FOOTER ─── */
+.form-footer {
+  padding: 20px 36px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.form-footer a {
+  color: var(--indigo-bright);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-footer a:hover { text-decoration: underline; }
+
+/* ─── VISUAL PANEL ─── */
+.visual-panel {
+  width: 50%;
+  background: var(--visual-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-panel::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,67,173,0.2) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+#auth-constellation {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.visual-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 48px;
+  max-width: 480px;
+  pointer-events: none;
+}
+
+.visual-tagline {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.92);
+  text-wrap: balance;
+}
+
+:root[data-theme="light"] .visual-tagline { color: #1A1A2E; }
+
+.visual-sub {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.5);
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+:root[data-theme="light"] .visual-sub { color: #6B6E8A; }
+
+.visual-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 36px;
+}
+
+.visual-stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--indigo-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+.visual-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+:root[data-theme="light"] .visual-stat-label { color: #9CA0B8; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .auth-layout { flex-direction: column; }
+  .form-panel { width: 100%; min-height: 100vh; }
+  .visual-panel { display: none; }
+}
+
+@media (max-width: 480px) {
+  .form-header { padding: 20px 24px; }
+  .form-body { padding: 0 24px; }
+  .form-footer { padding: 16px 24px; }
+  .field-row { flex-direction: column; gap: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+</style>
+
+<div class="auth-layout">
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-header">
+      <a href="landing-page-v2.html" class="logo">Constella</a>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+
+    <div class="form-body">
+      <!-- Sign Up view (default) -->
+      <div id="view-signup">
+        <h1>Create your account</h1>
+        <p class="subtitle">Start exploring real alumni paths from your school.</p>
+
+        <div class="mode-toggle">
+          <button class="mode-btn active" onclick="showView('signup')">Sign Up</button>
+          <button class="mode-btn" onclick="showView('login')">Log In</button>
+        </div>
+
+        <div class="social-buttons">
+          <button class="social-btn">
+            <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continue with Google
+          </button>
+        </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="field">
+              <label for="first-name">First name</label>
+              <input type="text" id="first-name" placeholder="Alex">
+            </div>
+            <div class="field">
+              <label for="last-name">Last name</label>
+              <input type="text" id="last-name" placeholder="Johnson">
+            </div>
+          </div>
+          <div class="field">
+            <label for="email-signup">School email</label>
+            <input type="email" id="email-signup" placeholder="alex@umich.edu">
+          </div>
+          <div class="field">
+            <label for="password-signup">Password</label>
+            <div class="password-field">
+              <input type="password" id="password-signup" placeholder="Min. 8 characters">
+              <button class="password-toggle" onclick="togglePassword('password-signup')" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="submit-btn">Create Account</button>
+
+        <p class="terms">By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      </div>
+
+      <!-- Log In view -->
+      <div id="view-login" style="display:none;">
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to continue exploring your constellation.</p>
+
+        <div class="mode-toggle">
+          <button class="mode-btn" onclick="showView('signup')">Sign Up</button>
+          <button class="mode-btn active" onclick="showView('login')">Log In</button>
+        </div>
+
+        <div class="social-buttons">
+          <button class="social-btn">
+            <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continue with Google
+          </button>
+        </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <div class="form-fields">
+          <div class="field">
+            <label for="email-login">Email</label>
+            <input type="email" id="email-login" placeholder="alex@umich.edu">
+          </div>
+          <div class="field">
+            <label for="password-login">Password</label>
+            <div class="password-field">
+              <input type="password" id="password-login" placeholder="Enter your password">
+              <button class="password-toggle" onclick="togglePassword('password-login')" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button class="submit-btn">Sign In</button>
+      </div>
+    </div>
+
+    <div class="form-footer" id="form-footer">
+      Already have an account? <a href="#" onclick="showView('login'); return false;">Log in</a>
+    </div>
+  </div>
+
+  <!-- VISUAL PANEL -->
+  <div class="visual-panel">
+    <canvas id="auth-constellation"></canvas>
+    <div class="visual-content">
+      <p class="visual-tagline">Every alumnus left a map. Now you can follow it.</p>
+      <p class="visual-sub">See what students like you actually did — the majors they chose, the pivots they made, and where they ended up.</p>
+      <div class="visual-stats">
+        <div>
+          <div class="visual-stat-number">68+</div>
+          <div class="visual-stat-label">Alumni paths</div>
+        </div>
+        <div>
+          <div class="visual-stat-number">7</div>
+          <div class="visual-stat-label">Career clusters</div>
+        </div>
+        <div>
+          <div class="visual-stat-number">92%</div>
+          <div class="visual-stat-label">Match accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── THEME ───
+function isLightTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'light';
+}
+
+function toggleTheme() {
+  const isLight = isLightTheme();
+  document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('constella-theme', isLight ? 'dark' : 'light');
+  if (constellationInstance) {
+    constellationInstance.stop();
+    constellationInstance = createConstellation('auth-constellation');
+  }
+}
+
+(function() {
+  const saved = localStorage.getItem('constella-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+// ─── VIEW SWITCHING ───
+function showView(view) {
+  document.getElementById('view-signup').style.display = view === 'signup' ? 'block' : 'none';
+  document.getElementById('view-login').style.display = view === 'login' ? 'block' : 'none';
+
+  const footer = document.getElementById('form-footer');
+  if (view === 'signup') {
+    footer.innerHTML = 'Already have an account? <a href="#" onclick="showView(\'login\'); return false;">Log in</a>';
+  } else {
+    footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="showView(\'signup\'); return false;">Sign up</a>';
+  }
+}
+
+// ─── PASSWORD TOGGLE ───
+function togglePassword(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// ─── CONSTELLATION RENDERER ───
+function createConstellation(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  let W, H, nodes = [], animId;
+
+  const clusters = [
+    { label: 'Health Policy', angle: -0.4, dist: 0.28, count: 10 },
+    { label: 'UX Research', angle: 0.9, dist: 0.32, count: 7 },
+    { label: 'Data Science', angle: 2.0, dist: 0.25, count: 9 },
+    { label: 'Biotech', angle: 3.2, dist: 0.35, count: 5 },
+    { label: 'Education', angle: 4.5, dist: 0.28, count: 8 },
+    { label: 'Finance', angle: 5.4, dist: 0.3, count: 4 },
+  ];
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function initNodes() {
+    nodes = [];
+    const cx = W / 2, cy = H / 2;
+    const light = isLightTheme();
+
+    nodes.push({
+      x: cx, y: cy, r: 8, color: '#3E43AD',
+      isCenter: true, label: 'You', baseX: cx, baseY: cy
+    });
+
+    clusters.forEach(cl => {
+      const clx = cx + Math.cos(cl.angle) * Math.min(W, H) * cl.dist;
+      const cly = cy + Math.sin(cl.angle) * Math.min(W, H) * cl.dist;
+      for (let i = 0; i < cl.count; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = 18 + Math.random() * 32;
+        const nx = clx + Math.cos(a) * s;
+        const ny = cly + Math.sin(a) * s;
+        const op = 0.3 + Math.random() * 0.5;
+        nodes.push({
+          x: nx, y: ny, r: 2 + Math.random() * 3,
+          color: light ? `rgba(80,85,120,${op})` : `rgba(200,204,216,${op})`,
+          baseX: nx, baseY: ny, cluster: cl.label
+        });
+      }
+      nodes.push({ x: clx, y: cly - 42, isLabel: true, label: cl.label });
+    });
+
+    for (let i = 0; i < 18; i++) {
+      const bgOp = 0.05 + Math.random() * 0.1;
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: 1 + Math.random() * 1.5,
+        color: light ? `rgba(80,85,120,${bgOp * 1.5})` : `rgba(200,204,216,${bgOp})`,
+        baseX: Math.random() * W, baseY: Math.random() * H, isBg: true
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    const light = isLightTheme();
+
+    ctx.lineWidth = 0.4;
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].isLabel || nodes[i].isBg) continue;
+      for (let j = i + 1; j < nodes.length; j++) {
+        if (nodes[j].isLabel || nodes[j].isBg) continue;
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 90) {
+          const op = (1 - dist / 90) * 0.1;
+          ctx.strokeStyle = (nodes[i].isCenter || nodes[j].isCenter)
+            ? `rgba(91,96,232,${op * 2.5})`
+            : (light ? `rgba(80,85,120,${op * 1.5})` : `rgba(200,204,216,${op})`);
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    nodes.forEach(n => {
+      if (n.isLabel) {
+        ctx.font = '10px system-ui, sans-serif';
+        ctx.fillStyle = light ? 'rgba(80,85,120,0.5)' : 'rgba(200,204,216,0.35)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y);
+        return;
+      }
+      if (n.baseX !== undefined) {
+        n.x = n.baseX + Math.sin(t * 0.0004 + n.baseY * 0.01) * 6;
+        n.y = n.baseY + Math.cos(t * 0.0003 + n.baseX * 0.01) * 5;
+      }
+      if (n.isCenter) {
+        const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 22);
+        g.addColorStop(0, light ? 'rgba(62,67,173,0.15)' : 'rgba(62,67,173,0.25)');
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(n.x, n.y, 22, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = n.color;
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      if (n.isCenter && n.label) {
+        ctx.font = '600 11px system-ui, sans-serif';
+        ctx.fillStyle = light ? 'rgba(30,30,60,0.6)' : 'rgba(255,255,255,0.6)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + n.r + 15);
+      }
+    });
+    animId = requestAnimationFrame(draw);
+  }
+
+  function start() { resize(); initNodes(); draw(0); }
+  window.addEventListener('resize', () => { cancelAnimationFrame(animId); start(); });
+  start();
+  return { start, stop: () => cancelAnimationFrame(animId) };
+}
+
+let constellationInstance = createConstellation('auth-constellation');
+</script>
