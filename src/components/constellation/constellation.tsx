@@ -34,8 +34,8 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
   const nodesRef = useRef<Node[]>([]);
   const transformRef = useRef(d3.zoomIdentity);
   const [expandedCluster, setExpandedCluster] = useState<string | null>(null);
-  const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const hoveredNodeRef = useRef<Node | null>(null);
+  const [tooltip, setTooltip] = useState<{ node: Node; x: number; y: number } | null>(null);
   const { theme } = useTheme();
   const animRef = useRef<number>(0);
 
@@ -43,27 +43,31 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
     (width: number, height: number): Node[] => {
       const cx = width / 2;
       const cy = height / 2;
-      const scale = Math.min(width, height);
       const nodes: Node[] = [];
 
-      // Student node
+      // Student node — fixed at center
       nodes.push({
         id: "student",
         x: cx,
         y: cy,
-        r: 10,
+        r: 12,
         color: "#5B60E8",
         type: "student",
         label: "You",
         opacity: 1,
       });
 
-      data.clusters.forEach((cluster) => {
-        const clusterX = cx + cluster.x * scale;
-        const clusterY = cy + cluster.y * scale;
+      // Distribute cluster centers evenly around the student
+      const clusterCount = data.clusters.length;
+      const orbitRadius = Math.min(width, height) * 0.3;
+
+      data.clusters.forEach((cluster, i) => {
+        const angle = (i / clusterCount) * Math.PI * 2 - Math.PI / 2;
+        const clusterX = cx + Math.cos(angle) * orbitRadius;
+        const clusterY = cy + Math.sin(angle) * orbitRadius;
         const color = CLUSTER_COLORS[cluster.label] || "#888";
 
-        // Cluster center (invisible, for force targeting)
+        // Cluster center (invisible anchor for force targeting)
         nodes.push({
           id: `center-${cluster.id}`,
           x: clusterX,
@@ -76,15 +80,15 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
           opacity: 0,
         });
 
-        // Alumni nodes
+        // Alumni nodes — scatter around cluster center
         cluster.alumni.forEach((alumni) => {
-          const angle = Math.random() * Math.PI * 2;
-          const dist = 20 + Math.random() * 40;
+          const a = Math.random() * Math.PI * 2;
+          const dist = 35 + Math.random() * 65;
           nodes.push({
             id: alumni.id,
-            x: clusterX + Math.cos(angle) * dist,
-            y: clusterY + Math.sin(angle) * dist,
-            r: 3 + (alumni.similarityScore / 100) * 4,
+            x: clusterX + Math.cos(a) * dist,
+            y: clusterY + Math.sin(a) * dist,
+            r: 5 + (alumni.similarityScore / 100) * 5,
             color,
             type: "alumni",
             cluster: cluster.label,
@@ -163,7 +167,7 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
       const inExpanded =
         expandedCluster === null || expandedCluster === node.cluster || node.type === "student";
       const isSelected = selectedAlumniId === node.id;
-      const isHovered = hoveredNode?.id === node.id;
+      const isHovered = hoveredNodeRef.current?.id === node.id;
       const alpha = inExpanded ? node.opacity : 0.1;
 
       // Glow for student node
@@ -227,7 +231,7 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
     });
 
     ctx.restore();
-  }, [theme, expandedCluster, selectedAlumniId, hoveredNode]);
+  }, [theme, expandedCluster, selectedAlumniId]);
 
   // Initialize simulation
   useEffect(() => {
@@ -247,40 +251,50 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
     const nodes = buildNodes(w, h);
     nodesRef.current = nodes;
 
+    // Pre-compute cluster center positions (keyed by cluster label)
+    const centerMap = new Map<string, Node>();
+    nodes.forEach((n) => {
+      if (n.type === "cluster-center") centerMap.set(n.cluster!, n);
+    });
+
     // Force simulation
     const sim = d3
       .forceSimulation(nodes)
       .force(
-        "cluster",
+        "charge",
         d3.forceManyBody<Node>().strength((d) => {
-          if (d.type === "student") return -80;
-          if (d.type === "cluster-center") return -20;
-          return -8;
+          if (d.type === "student") return -200;
+          if (d.type === "cluster-center") return -300;
+          return -12;
         }),
       )
       .force(
         "x",
         d3.forceX<Node>((d) => {
-          if (d.type === "student") return w / 2;
-          const center = nodes.find(
-            (n) => n.type === "cluster-center" && n.cluster === d.cluster,
-          );
+          if (d.type === "student" || d.type === "cluster-center") return d.x;
+          const center = centerMap.get(d.cluster!);
           return center ? center.x : w / 2;
-        }).strength((d) => (d.type === "alumni" ? 0.15 : 0.5)),
+        }).strength((d) => {
+          if (d.type === "student") return 1;
+          if (d.type === "cluster-center") return 0.4;
+          return 0.12;
+        }),
       )
       .force(
         "y",
         d3.forceY<Node>((d) => {
-          if (d.type === "student") return h / 2;
-          const center = nodes.find(
-            (n) => n.type === "cluster-center" && n.cluster === d.cluster,
-          );
+          if (d.type === "student" || d.type === "cluster-center") return d.y;
+          const center = centerMap.get(d.cluster!);
           return center ? center.y : h / 2;
-        }).strength((d) => (d.type === "alumni" ? 0.15 : 0.5)),
+        }).strength((d) => {
+          if (d.type === "student") return 1;
+          if (d.type === "cluster-center") return 0.4;
+          return 0.12;
+        }),
       )
       .force(
         "collide",
-        d3.forceCollide<Node>((d) => d.r + 2).strength(0.8),
+        d3.forceCollide<Node>((d) => d.r + 6).strength(0.9),
       )
       .alphaDecay(0.02)
       .on("tick", draw);
@@ -392,18 +406,33 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
       if (canvas) {
         canvas.style.cursor = node ? "pointer" : "grab";
       }
-      setHoveredNode(node);
-      if (node) {
-        const rect = canvasRef.current!.getBoundingClientRect();
-        setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+
+      const prev = hoveredNodeRef.current;
+      hoveredNodeRef.current = node;
+
+      // Only update tooltip state when hovered node changes (not every pixel)
+      if (node?.id !== prev?.id) {
+        if (node && node.type === "alumni") {
+          const rect = canvas!.getBoundingClientRect();
+          setTooltip({ node, x: e.clientX - rect.left, y: e.clientY - rect.top });
+        } else {
+          setTooltip(null);
+        }
+        draw();
+      } else if (node && node.type === "alumni") {
+        // Update position without re-render
+        const rect = canvas!.getBoundingClientRect();
+        setTooltip({ node, x: e.clientX - rect.left, y: e.clientY - rect.top });
       }
     },
-    [hitTest],
+    [hitTest, draw],
   );
 
   const handleMouseLeave = useCallback(() => {
-    setHoveredNode(null);
-  }, []);
+    hoveredNodeRef.current = null;
+    setTooltip(null);
+    draw();
+  }, [draw]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
@@ -416,24 +445,24 @@ export function Constellation({ data, onSelectAlumni, selectedAlumniId }: Props)
       />
 
       {/* Tooltip */}
-      {hoveredNode && hoveredNode.type === "alumni" && hoveredNode.alumni && (
+      {tooltip && tooltip.node.alumni && (
         <div
           className="absolute pointer-events-none bg-space-card border border-border rounded-lg px-3 py-2 text-xs shadow-lg z-10"
           style={{
-            left: tooltipPos.x + 12,
-            top: tooltipPos.y - 10,
+            left: tooltip.x + 12,
+            top: tooltip.y - 10,
             transform: "translateY(-100%)",
           }}
         >
           <div className="font-semibold mb-0.5">
-            {hoveredNode.alumni.majors.join(" + ")}
+            {tooltip.node.alumni.majors.join(" + ")}
           </div>
           <div className="text-text-secondary">
-            {hoveredNode.alumni.careerOutcome.title}
+            {tooltip.node.alumni.careerOutcome.title}
           </div>
           <div className="text-text-tertiary mt-0.5">
-            Class of {hoveredNode.alumni.graduationYear} &middot;{" "}
-            {hoveredNode.alumni.similarityScore}% match
+            Class of {tooltip.node.alumni.graduationYear} &middot;{" "}
+            {tooltip.node.alumni.similarityScore}% match
           </div>
         </div>
       )}
