@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
 
 export default function LandingPage() {
   return (
@@ -87,11 +88,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Hero visual — constellation placeholder */}
+          {/* Hero visual — constellation */}
           <div className="relative flex items-center justify-center">
             <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(62,67,173,0.2)_0%,transparent_70%)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-            <div className="w-full h-[500px] flex items-center justify-center text-text-tertiary text-sm max-md:h-[300px]">
-              Constellation canvas
+            <div className="w-full h-[500px] max-md:h-[300px]">
+              <DecorativeConstellation />
             </div>
           </div>
         </div>
@@ -201,8 +202,8 @@ export default function LandingPage() {
               <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
             </div>
-            <div className="p-12 min-h-[380px] flex items-center justify-center text-text-tertiary text-sm">
-              Constellation mockup canvas
+            <div className="min-h-[380px]">
+              <DecorativeConstellation />
             </div>
           </div>
         </div>
@@ -240,8 +241,8 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-surface border border-border rounded-xl p-8 min-h-[320px] flex items-center justify-center text-text-tertiary text-sm">
-              Cluster canvas
+            <div className="bg-surface border border-border rounded-xl overflow-hidden min-h-[320px]">
+              <DecorativeConstellation />
             </div>
           </div>
         </div>

@@ -1,3 +1,5 @@
+import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
+
 export default function DashboardPage() {
   return (
     <>
@@ -49,8 +51,8 @@ export default function DashboardPage() {
                 Open Full View
               </button>
             </div>
-            <div className="h-60 flex items-center justify-center text-text-tertiary text-sm">
-              Constellation preview
+            <div className="h-60">
+              <DecorativeConstellation />
             </div>
           </div>
           {/* Quick actions */}

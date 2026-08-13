@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -29,7 +31,7 @@ export default function LoginPage() {
       </div>
 
       {/* Google OAuth */}
-      <button className="flex items-center justify-center gap-2.5 w-full py-3 rounded-[10px] border border-border bg-surface text-text-primary text-sm font-semibold hover:bg-space-hover hover:border-border-hover transition-all mb-6">
+      <button onClick={() => router.push("/dashboard")} className="flex items-center justify-center gap-2.5 w-full py-3 rounded-[10px] border border-border bg-surface text-text-primary text-sm font-semibold hover:bg-space-hover hover:border-border-hover transition-all mb-6">
         <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] shrink-0">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -47,7 +49,7 @@ export default function LoginPage() {
       </div>
 
       {/* Form */}
-      <form className="flex flex-col gap-4 mb-6">
+      <form className="flex flex-col gap-4 mb-6" onSubmit={(e) => { e.preventDefault(); router.push("/dashboard"); }}>
         <label className="flex flex-col gap-1.5">
           <span className="text-[13px] font-semibold text-text-secondary">Email</span>
           <input

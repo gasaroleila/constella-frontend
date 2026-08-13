@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +24,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* Visual panel (desktop only) */}
       <div className="hidden md:flex w-1/2 flex-col items-center justify-center bg-[var(--t-visual-bg)] relative overflow-hidden">
+        {/* Constellation animation */}
+        <DecorativeConstellation className="absolute inset-0" />
         {/* Glow */}
         <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(62,67,173,0.2)_0%,transparent_70%)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
