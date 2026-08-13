@@ -40,12 +40,6 @@ export default function LandingPage() {
       <section className="min-h-screen flex items-center px-12 pt-[120px] pb-20 relative overflow-hidden max-md:px-6 max-md:pt-24">
         <div className="grid grid-cols-2 gap-16 max-w-[1280px] mx-auto w-full items-center relative z-[2] max-md:grid-cols-1 max-md:gap-10">
           <div className="max-w-[560px]">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-indigo/15 border border-indigo/30 rounded-full px-4 py-1.5 mb-7 text-[13px] text-indigo-bright font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80]" />
-              Now open for early access
-            </div>
-
             <h1 className="text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-1.5px] mb-5 text-balance">
               See what students{" "}
               <em className="not-italic text-indigo-bright">like you</em>{" "}

@@ -13,7 +13,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("constella-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch{}`,
+            __html: `try{var t=localStorage.getItem("constella-theme")||"light";document.documentElement.setAttribute("data-theme",t)}catch{document.documentElement.setAttribute("data-theme","light")}`,
           }}
         />
       </head>

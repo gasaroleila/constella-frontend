@@ -7,15 +7,15 @@ type Theme = "dark" | "light";
 const ThemeContext = createContext<{
   theme: Theme;
   toggle: () => void;
-}>({ theme: "dark", toggle: () => {} });
+}>({ theme: "light", toggle: () => {} });
 
 export function useTheme() {
   return useContext(ThemeContext);
 }
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  return (document.documentElement.getAttribute("data-theme") as Theme) || "dark";
+  if (typeof window === "undefined") return "light";
+  return (document.documentElement.getAttribute("data-theme") as Theme) || "light";
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

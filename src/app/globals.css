@@ -21,28 +21,8 @@
   --font-sans: "Avenir Next", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Dark theme (default) */
+/* Light theme (default) */
 :root {
-  --t-space: #04060F;
-  --t-space-raised: #0B0E1C;
-  --t-space-card: #10132A;
-  --t-space-hover: #161A36;
-  --t-green: #34D399;
-  --t-amber: #FBBF24;
-  --t-rose: #FB7185;
-  --t-text-primary: rgba(255, 255, 255, 0.92);
-  --t-text-secondary: rgba(255, 255, 255, 0.55);
-  --t-text-tertiary: rgba(255, 255, 255, 0.3);
-  --t-border: rgba(255, 255, 255, 0.07);
-  --t-border-hover: rgba(255, 255, 255, 0.12);
-  --t-surface: rgba(255, 255, 255, 0.04);
-  --t-dot: rgba(255, 255, 255, 0.2);
-  --t-dot-border: rgba(255, 255, 255, 0.5);
-  --t-visual-bg: #080B18;
-}
-
-/* Light theme */
-:root[data-theme="light"] {
   --t-space: #F5F6FA;
   --t-space-raised: #FFFFFF;
   --t-space-card: #FFFFFF;
@@ -59,6 +39,26 @@
   --t-dot: rgba(0, 0, 0, 0.2);
   --t-dot-border: rgba(0, 0, 0, 0.35);
   --t-visual-bg: #E8EAF2;
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --t-space: #04060F;
+  --t-space-raised: #0B0E1C;
+  --t-space-card: #10132A;
+  --t-space-hover: #161A36;
+  --t-green: #34D399;
+  --t-amber: #FBBF24;
+  --t-rose: #FB7185;
+  --t-text-primary: rgba(255, 255, 255, 0.92);
+  --t-text-secondary: rgba(255, 255, 255, 0.55);
+  --t-text-tertiary: rgba(255, 255, 255, 0.3);
+  --t-border: rgba(255, 255, 255, 0.07);
+  --t-border-hover: rgba(255, 255, 255, 0.12);
+  --t-surface: rgba(255, 255, 255, 0.04);
+  --t-dot: rgba(255, 255, 255, 0.2);
+  --t-dot-border: rgba(255, 255, 255, 0.5);
+  --t-visual-bg: #080B18;
 }
 
 body {
