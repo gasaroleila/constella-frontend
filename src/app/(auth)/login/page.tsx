@@ -14,7 +14,7 @@ export default function LoginPage() {
           <input
             type="email"
             placeholder="alex@umich.edu"
-            className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+            className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
         </label>
         <label className="flex flex-col gap-1.5">
@@ -22,7 +22,7 @@ export default function LoginPage() {
           <input
             type="password"
             placeholder="Enter your password"
-            className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+            className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
         </label>
         <button

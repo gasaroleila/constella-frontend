@@ -67,7 +67,7 @@ export default function DashboardPage() {
               ].map((action) => (
                 <button
                   key={action.label}
-                  className="flex items-center gap-2.5 p-3.5 rounded-[10px] border border-border text-left hover:bg-white/[0.03] hover:border-border-hover transition-all"
+                  className="flex items-center gap-2.5 p-3.5 rounded-[10px] border border-border text-left hover:bg-surface hover:border-border-hover transition-all"
                 >
                   <div>
                     <div className="text-[13px] font-semibold">

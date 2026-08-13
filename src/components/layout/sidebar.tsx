@@ -83,7 +83,7 @@ export function Sidebar() {
             className={`flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-sm font-medium transition-all ${
               pathname === item.href
                 ? "bg-indigo/15 text-indigo-bright [&_svg]:opacity-100"
-                : "text-text-secondary hover:bg-white/4 hover:text-text-primary [&_svg]:opacity-60"
+                : "text-text-secondary hover:bg-surface hover:text-text-primary [&_svg]:opacity-60"
             }`}
           >
             <span className="w-[18px] h-[18px] shrink-0">{item.icon}</span>
@@ -100,7 +100,7 @@ export function Sidebar() {
             className={`flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-sm font-medium transition-all ${
               pathname === item.href
                 ? "bg-indigo/15 text-indigo-bright [&_svg]:opacity-100"
-                : "text-text-secondary hover:bg-white/4 hover:text-text-primary [&_svg]:opacity-60"
+                : "text-text-secondary hover:bg-surface hover:text-text-primary [&_svg]:opacity-60"
             }`}
           >
             <span className="w-[18px] h-[18px] shrink-0">{item.icon}</span>

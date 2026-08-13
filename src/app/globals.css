@@ -1,21 +1,62 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-space: #04060F;
-  --color-space-raised: #0B0E1C;
-  --color-space-card: #10132A;
-  --color-space-hover: #161A36;
+  --color-space: var(--t-space);
+  --color-space-raised: var(--t-space-raised);
+  --color-space-card: var(--t-space-card);
+  --color-space-hover: var(--t-space-hover);
   --color-indigo: #3E43AD;
   --color-indigo-bright: #5B60E8;
-  --color-green: #34D399;
-  --color-amber: #FBBF24;
-  --color-rose: #FB7185;
-  --color-text-primary: rgba(255, 255, 255, 0.92);
-  --color-text-secondary: rgba(255, 255, 255, 0.55);
-  --color-text-tertiary: rgba(255, 255, 255, 0.3);
-  --color-border: rgba(255, 255, 255, 0.07);
-  --color-border-hover: rgba(255, 255, 255, 0.12);
+  --color-green: var(--t-green);
+  --color-amber: var(--t-amber);
+  --color-rose: var(--t-rose);
+  --color-text-primary: var(--t-text-primary);
+  --color-text-secondary: var(--t-text-secondary);
+  --color-text-tertiary: var(--t-text-tertiary);
+  --color-border: var(--t-border);
+  --color-border-hover: var(--t-border-hover);
+  --color-surface: var(--t-surface);
+  --color-dot: var(--t-dot);
+  --color-dot-border: var(--t-dot-border);
   --font-sans: "Avenir Next", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Dark theme (default) */
+:root {
+  --t-space: #04060F;
+  --t-space-raised: #0B0E1C;
+  --t-space-card: #10132A;
+  --t-space-hover: #161A36;
+  --t-green: #34D399;
+  --t-amber: #FBBF24;
+  --t-rose: #FB7185;
+  --t-text-primary: rgba(255, 255, 255, 0.92);
+  --t-text-secondary: rgba(255, 255, 255, 0.55);
+  --t-text-tertiary: rgba(255, 255, 255, 0.3);
+  --t-border: rgba(255, 255, 255, 0.07);
+  --t-border-hover: rgba(255, 255, 255, 0.12);
+  --t-surface: rgba(255, 255, 255, 0.04);
+  --t-dot: rgba(255, 255, 255, 0.2);
+  --t-dot-border: rgba(255, 255, 255, 0.5);
+}
+
+/* Light theme */
+:root[data-theme="light"] {
+  --t-space: #F5F6FA;
+  --t-space-raised: #FFFFFF;
+  --t-space-card: #FFFFFF;
+  --t-space-hover: #EDEEF4;
+  --t-green: #059669;
+  --t-amber: #D97706;
+  --t-rose: #E11D48;
+  --t-text-primary: #1A1A2E;
+  --t-text-secondary: #6B6E8A;
+  --t-text-tertiary: #9CA0B8;
+  --t-border: rgba(0, 0, 0, 0.08);
+  --t-border-hover: rgba(0, 0, 0, 0.14);
+  --t-surface: rgba(0, 0, 0, 0.04);
+  --t-dot: rgba(0, 0, 0, 0.2);
+  --t-dot-border: rgba(0, 0, 0, 0.35);
 }
 
 body {

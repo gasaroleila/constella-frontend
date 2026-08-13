@@ -9,7 +9,7 @@ export default function ExplorePage() {
             Discover alumni who started where you are
           </p>
           {/* Mode toggle */}
-          <div className="flex mt-4 bg-white/4 border border-border rounded-lg p-[3px]">
+          <div className="flex mt-4 bg-surface border border-border rounded-lg p-[3px]">
             <button className="flex-1 py-[7px] rounded-md text-xs font-semibold text-center bg-indigo text-white">
               Open
             </button>
@@ -26,7 +26,7 @@ export default function ExplorePage() {
               Your Year
             </div>
             <input
-              className="w-full px-3 py-[9px] rounded-lg bg-white/4 border border-border text-[13px] outline-none focus:border-indigo"
+              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo"
               value="Sophomore"
               readOnly
             />
@@ -44,7 +44,7 @@ export default function ExplorePage() {
                     className={`text-xs px-2.5 py-[5px] rounded-md border transition-all ${
                       i < 2
                         ? "bg-indigo/15 border-indigo/30 text-indigo-bright"
-                        : "bg-white/4 border-border text-text-secondary hover:border-border-hover"
+                        : "bg-surface border-border text-text-secondary hover:border-border-hover"
                     }`}
                   >
                     {tag}
@@ -59,7 +59,7 @@ export default function ExplorePage() {
               Career Area
             </div>
             <input
-              className="w-full px-3 py-[9px] rounded-lg bg-white/4 border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
+              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
               placeholder="Any career area"
             />
           </div>
@@ -69,7 +69,7 @@ export default function ExplorePage() {
               Major Filter
             </div>
             <input
-              className="w-full px-3 py-[9px] rounded-lg bg-white/4 border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
+              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
               placeholder="Any major"
             />
           </div>
@@ -124,7 +124,7 @@ export default function ExplorePage() {
             <span className="text-[11px] px-2.5 py-1 rounded-md font-semibold bg-indigo/15 text-indigo-bright">
               94% Match
             </span>
-            <span className="text-[11px] px-2.5 py-1 rounded-md font-semibold bg-white/5 text-text-secondary">
+            <span className="text-[11px] px-2.5 py-1 rounded-md font-semibold bg-surface text-text-secondary">
               Class of 2022
             </span>
           </div>
@@ -155,7 +155,7 @@ export default function ExplorePage() {
                   className={
                     item.pivot
                       ? "w-2.5 h-2.5 rounded-sm rotate-45 bg-indigo border-2 border-indigo-bright shrink-0 z-[1]"
-                      : "w-2 h-2 rounded-full bg-white/20 border-2 border-white/50 shrink-0 z-[1]"
+                      : "w-2 h-2 rounded-full bg-dot border-2 border-dot-border shrink-0 z-[1]"
                   }
                 />
                 {i < arr.length - 1 && (
@@ -181,8 +181,8 @@ export default function ExplorePage() {
                           tag === "new"
                             ? "bg-indigo/15 text-indigo-bright"
                             : tag === "dropped"
-                              ? "bg-white/5 text-text-secondary line-through opacity-40"
-                              : "bg-white/5 text-text-secondary"
+                              ? "bg-surface text-text-secondary line-through opacity-40"
+                              : "bg-surface text-text-secondary"
                         }`}
                       >
                         {name}
@@ -205,7 +205,7 @@ export default function ExplorePage() {
               (act) => (
                 <span
                   key={act}
-                  className="text-[11px] px-2.5 py-1 rounded-md bg-white/4 text-text-secondary border border-border"
+                  className="text-[11px] px-2.5 py-1 rounded-md bg-surface text-text-secondary border border-border"
                 >
                   {act}
                 </span>

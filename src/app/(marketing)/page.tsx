@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function LandingPage() {
   return (
@@ -9,19 +10,20 @@ export default function LandingPage() {
         <div className="flex items-center gap-8">
           <Link
             href="#features"
-            className="text-sm font-medium text-white/65 hover:text-white transition-colors max-md:hidden"
+            className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors max-md:hidden"
           >
             Features
           </Link>
           <Link
             href="#how-it-works"
-            className="text-sm font-medium text-white/65 hover:text-white transition-colors max-md:hidden"
+            className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors max-md:hidden"
           >
             How It Works
           </Link>
+          <ThemeToggle />
           <Link
             href="/login"
-            className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+            className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
             Log In
           </Link>
@@ -65,7 +67,7 @@ export default function LandingPage() {
               </Link>
               <Link
                 href="#how-it-works"
-                className="inline-flex items-center px-7 py-3.5 border border-white/20 text-white rounded-lg text-[15px] font-semibold hover:border-white/40 hover:bg-white/5 transition-all max-sm:justify-center"
+                className="inline-flex items-center px-7 py-3.5 border border-border text-text-primary rounded-lg text-[15px] font-semibold hover:border-border-hover hover:bg-surface transition-all max-sm:justify-center"
               >
                 See How It Works
               </Link>
@@ -102,7 +104,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats bar */}
-      <div className="px-12 py-12 border-y border-white/8 max-md:px-6">
+      <div className="px-12 py-12 border-y border-border max-md:px-6">
         <div className="max-w-[900px] mx-auto flex justify-center gap-16 flex-wrap max-md:gap-8">
           {[
             { number: "68+", label: "Alumni paths mapped" },
@@ -164,7 +166,7 @@ export default function LandingPage() {
             ].map((card) => (
               <div
                 key={card.title}
-                className="p-8 rounded-xl bg-white/[0.03] border border-white/8"
+                className="p-8 rounded-xl bg-surface border border-border"
               >
                 <div className="w-12 h-12 mb-5 rounded-[10px] flex items-center justify-center bg-indigo/10">
                   <span className="w-6 h-6">{card.icon}</span>
@@ -182,7 +184,7 @@ export default function LandingPage() {
       </section>
 
       {/* Solution overview */}
-      <section className="px-12 py-[100px] bg-[#0E1125] max-md:px-6">
+      <section className="px-12 py-[100px] bg-space-raised max-md:px-6">
         <div className="max-w-[1120px] mx-auto">
           <div className="text-center mb-14">
             <div className="text-xs font-bold tracking-[2.5px] uppercase text-indigo-bright mb-4">
@@ -199,8 +201,8 @@ export default function LandingPage() {
             </p>
           </div>
           {/* Browser mockup */}
-          <div className="max-w-[960px] mx-auto bg-space rounded-xl overflow-hidden border border-white/8 shadow-[0_32px_80px_rgba(0,0,0,0.25),0_0_0_1px_rgba(255,255,255,0.05)]">
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/4 border-b border-white/6">
+          <div className="max-w-[960px] mx-auto bg-space rounded-xl overflow-hidden border border-border shadow-[0_32px_80px_rgba(0,0,0,0.25),0_0_0_1px_rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-2 px-4 py-3 bg-surface border-b border-border">
               <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
@@ -244,7 +246,7 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-white/[0.03] border border-white/8 rounded-xl p-8 min-h-[320px] flex items-center justify-center text-text-tertiary text-sm">
+            <div className="bg-surface border border-border rounded-xl p-8 min-h-[320px] flex items-center justify-center text-text-tertiary text-sm">
               Cluster canvas
             </div>
           </div>
@@ -252,19 +254,19 @@ export default function LandingPage() {
       </section>
 
       {/* Feature: What If Simulator */}
-      <section className="px-12 py-[100px] bg-[#0E1125] max-md:px-6">
+      <section className="px-12 py-[100px] bg-space-raised max-md:px-6">
         <div className="max-w-[1120px] mx-auto">
           <div className="grid grid-cols-2 gap-16 items-center max-md:grid-cols-1 max-md:gap-8">
             {/* Visual — on left (reversed in design via RTL but we just swap order) */}
-            <div className="bg-white/[0.03] border border-white/8 rounded-xl p-8 min-h-[320px] flex items-start gap-4 max-md:order-2">
+            <div className="bg-surface border border-border rounded-xl p-8 min-h-[320px] flex items-start gap-4 max-md:order-2">
               {/* Sim card */}
-              <div className="bg-white/5 border border-white/10 rounded-[10px] p-6 w-full max-w-[360px]">
+              <div className="bg-surface border border-border rounded-[10px] p-6 w-full max-w-[360px]">
                 <div className="flex items-center gap-2 mb-4 text-[13px] text-text-secondary">
-                  <span className="font-semibold text-sm text-white">
+                  <span className="font-semibold text-sm text-text-primary">
                     Economics
                   </span>
                   <span className="text-indigo-bright font-bold">&rarr;</span>
-                  <span className="font-semibold text-sm text-white">
+                  <span className="font-semibold text-sm text-text-primary">
                     Public Health
                   </span>
                 </div>
@@ -280,10 +282,10 @@ export default function LandingPage() {
                   ].map((row) => (
                     <div
                       key={row.label}
-                      className="flex justify-between text-[13px] py-2 border-b border-white/6 last:border-none"
+                      className="flex justify-between text-[13px] py-2 border-b border-border last:border-none"
                     >
                       <span className="text-text-secondary">{row.label}</span>
-                      <span className="text-white font-semibold">
+                      <span className="text-text-primary font-semibold">
                         {row.value}
                       </span>
                     </div>
@@ -326,11 +328,11 @@ export default function LandingPage() {
                         className={
                           tl.pivot
                             ? "w-3 h-3 rounded-sm rotate-45 bg-indigo border-2 border-indigo-bright shrink-0 z-[1]"
-                            : "w-2.5 h-2.5 rounded-full bg-white/20 border-2 border-white/50 shrink-0 z-[1]"
+                            : "w-2.5 h-2.5 rounded-full bg-dot border-2 border-dot-border shrink-0 z-[1]"
                         }
                       />
                       {i < arr.length - 1 && (
-                        <div className="w-px flex-1 bg-white/10 mt-1" />
+                        <div className="w-px flex-1 bg-border mt-1" />
                       )}
                     </div>
                     <div>
@@ -347,8 +349,8 @@ export default function LandingPage() {
                               c.tag === "new"
                                 ? "bg-indigo/20 text-indigo-bright"
                                 : c.tag === "dropped"
-                                  ? "bg-white/6 text-text-secondary line-through opacity-40"
-                                  : "bg-white/6 text-text-secondary"
+                                  ? "bg-surface text-text-secondary line-through opacity-40"
+                                  : "bg-surface text-text-secondary"
                             }`}
                           >
                             {c.name}
@@ -406,7 +408,7 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-3 gap-12 relative max-md:grid-cols-1">
             {/* Connecting line */}
-            <div className="absolute top-9 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent max-md:hidden" />
+            <div className="absolute top-9 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-border to-transparent max-md:hidden" />
             {[
               {
                 num: "1",
@@ -439,7 +441,7 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="px-12 py-[100px] bg-[#0E1125] max-md:px-6">
+      <section className="px-12 py-[100px] bg-space-raised max-md:px-6">
         <div className="max-w-[1120px] mx-auto">
           <div className="text-center mb-12">
             <div className="text-xs font-bold tracking-[2.5px] uppercase text-indigo-bright mb-4">
@@ -472,7 +474,7 @@ export default function LandingPage() {
             ].map((t) => (
               <div
                 key={t.author}
-                className="p-7 rounded-xl bg-white/4 border border-white/8"
+                className="p-7 rounded-xl bg-surface border border-border"
               >
                 <div className="flex gap-0.5 mb-3.5 text-sm text-[#F59E0B]">
                   {Array(5)
@@ -575,7 +577,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#020308] px-12 pt-16 pb-8 border-t border-white/8 max-md:px-6">
+      <footer className="bg-space px-12 pt-16 pb-8 border-t border-border max-md:px-6">
         <div className="max-w-[1120px] mx-auto grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-12 max-md:grid-cols-2 max-sm:grid-cols-1">
           <div>
             <div className="text-[22px] font-bold tracking-tight">
@@ -587,7 +589,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div>
-            <h4 className="text-[13px] font-bold text-white/50 uppercase tracking-[1.5px] mb-4">
+            <h4 className="text-[13px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-4">
               Product
             </h4>
             <div className="flex flex-col gap-1">
@@ -596,7 +598,7 @@ export default function LandingPage() {
                   <a
                     key={link}
                     href="#"
-                    className="text-sm text-text-secondary py-1 hover:text-white transition-colors"
+                    className="text-sm text-text-secondary py-1 hover:text-text-primary transition-colors"
                   >
                     {link}
                   </a>
@@ -605,7 +607,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div>
-            <h4 className="text-[13px] font-bold text-white/50 uppercase tracking-[1.5px] mb-4">
+            <h4 className="text-[13px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-4">
               Company
             </h4>
             <div className="flex flex-col gap-1">
@@ -613,7 +615,7 @@ export default function LandingPage() {
                 <a
                   key={link}
                   href="#"
-                  className="text-sm text-text-secondary py-1 hover:text-white transition-colors"
+                  className="text-sm text-text-secondary py-1 hover:text-text-primary transition-colors"
                 >
                   {link}
                 </a>
@@ -621,7 +623,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div>
-            <h4 className="text-[13px] font-bold text-white/50 uppercase tracking-[1.5px] mb-4">
+            <h4 className="text-[13px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-4">
               Legal
             </h4>
             <div className="flex flex-col gap-1">
@@ -630,7 +632,7 @@ export default function LandingPage() {
                   <a
                     key={link}
                     href="#"
-                    className="text-sm text-text-secondary py-1 hover:text-white transition-colors"
+                    className="text-sm text-text-secondary py-1 hover:text-text-primary transition-colors"
                   >
                     {link}
                   </a>
@@ -639,7 +641,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-[1120px] mx-auto mt-10 pt-6 border-t border-white/8 text-[13px] text-white/30">
+        <div className="max-w-[1120px] mx-auto mt-10 pt-6 border-t border-border text-[13px] text-text-tertiary">
           &copy; 2026 Constella. All rights reserved.
         </div>
       </footer>

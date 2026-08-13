@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -19,7 +20,7 @@ export function Topbar() {
       <div className="text-base font-semibold">{title}</div>
       <div className="flex items-center gap-4">
         {/* Search box */}
-        <div className="flex items-center gap-2 bg-white/4 border border-border rounded-lg px-3 py-[7px]">
+        <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-[7px]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -37,19 +38,9 @@ export function Topbar() {
           />
         </div>
         {/* Theme toggle */}
-        <button className="w-[34px] h-[34px] rounded-lg border border-border bg-transparent flex items-center justify-center text-text-secondary hover:bg-white/4 hover:border-border-hover transition-all">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="w-4 h-4"
-          >
-            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-          </svg>
-        </button>
+        <ThemeToggle />
         {/* Notifications */}
-        <button className="w-[34px] h-[34px] rounded-lg border border-border bg-transparent flex items-center justify-center text-text-secondary hover:bg-white/4 hover:border-border-hover transition-all">
+        <button className="w-[34px] h-[34px] rounded-lg border border-border bg-transparent flex items-center justify-center text-text-secondary hover:border-border-hover transition-all">
           <svg
             viewBox="0 0 24 24"
             fill="none"

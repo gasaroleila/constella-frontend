@@ -17,7 +17,7 @@ export default function SignupPage() {
             <input
               type="text"
               placeholder="Alex"
-              className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+              className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
           </label>
           <label className="flex flex-col gap-1.5 flex-1">
@@ -25,7 +25,7 @@ export default function SignupPage() {
             <input
               type="text"
               placeholder="Johnson"
-              className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+              className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
           </label>
         </div>
@@ -34,7 +34,7 @@ export default function SignupPage() {
           <input
             type="email"
             placeholder="alex@umich.edu"
-            className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+            className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
         </label>
         <label className="flex flex-col gap-1.5">
@@ -42,7 +42,7 @@ export default function SignupPage() {
           <input
             type="password"
             placeholder="Min. 8 characters"
-            className="px-3.5 py-3 rounded-lg border border-border bg-white/[0.04] text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
+            className="px-3.5 py-3 rounded-lg border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
         </label>
         <button

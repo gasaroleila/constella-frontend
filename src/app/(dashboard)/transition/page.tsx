@@ -14,7 +14,7 @@ export default function TransitionPage() {
               Currently In
             </label>
             <input
-              className="px-3.5 py-2.5 rounded-lg bg-white/4 border border-border text-sm outline-none focus:border-indigo min-w-[200px]"
+              className="px-3.5 py-2.5 rounded-lg bg-surface border border-border text-sm outline-none focus:border-indigo min-w-[200px]"
               value="Economics"
               readOnly
             />
@@ -27,7 +27,7 @@ export default function TransitionPage() {
               Switch To
             </label>
             <input
-              className="px-3.5 py-2.5 rounded-lg bg-white/4 border border-border text-sm outline-none focus:border-indigo min-w-[200px]"
+              className="px-3.5 py-2.5 rounded-lg bg-surface border border-border text-sm outline-none focus:border-indigo min-w-[200px]"
               value="Public Health"
               readOnly
             />
@@ -116,7 +116,7 @@ export default function TransitionPage() {
               </div>
             </div>
             <div className="px-5 py-4">
-              <div className="text-xs text-text-tertiary bg-white/[0.03] px-3 py-2 rounded-md mb-3">
+              <div className="text-xs text-text-tertiary bg-surface px-3 py-2 rounded-md mb-3">
                 {card.prePivot}
               </div>
               {card.timeline.map((tl, ti) => (
@@ -126,7 +126,7 @@ export default function TransitionPage() {
                       className={
                         tl.pivot
                           ? "w-2.5 h-2.5 rounded-sm rotate-45 bg-indigo border-2 border-indigo-bright shrink-0 z-[1]"
-                          : "w-2 h-2 rounded-full bg-white/20 border-2 border-white/50 shrink-0 z-[1]"
+                          : "w-2 h-2 rounded-full bg-dot border-2 border-dot-border shrink-0 z-[1]"
                       }
                     />
                     {ti < card.timeline.length - 1 && (
@@ -149,8 +149,8 @@ export default function TransitionPage() {
                             c.tag === "new"
                               ? "bg-indigo/15 text-indigo-bright"
                               : c.tag === "dropped"
-                                ? "bg-white/5 text-text-secondary line-through opacity-40"
-                                : "bg-white/5 text-text-secondary"
+                                ? "bg-surface text-text-secondary line-through opacity-40"
+                                : "bg-surface text-text-secondary"
                           }`}
                         >
                           {c.name}
