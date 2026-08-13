@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
 
 export default function DashboardPage() {
@@ -47,9 +48,9 @@ export default function DashboardPage() {
           <div className="bg-space-card border border-border rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <span className="text-sm font-semibold">Your Constellation</span>
-              <button className="text-xs text-indigo-bright font-medium hover:underline">
+              <Link href="/explore" className="text-xs text-indigo-bright font-medium hover:underline">
                 Open Full View
-              </button>
+              </Link>
             </div>
             <div className="h-60">
               <DecorativeConstellation />
@@ -62,16 +63,17 @@ export default function DashboardPage() {
             </div>
             <div className="p-5 grid grid-cols-2 gap-2.5">
               {[
-                { label: "Open Explore", desc: "Browse all alumni paths" },
-                { label: "Simulate a Pivot", desc: "What if you switched?" },
-                { label: "Update Profile", desc: "Add courses or interests" },
-                { label: "Saved Paths", desc: "Review your bookmarks" },
+                { label: "Open Explore", desc: "Browse all alumni paths", href: "/explore" },
+                { label: "Simulate a Pivot", desc: "What if you switched?", href: "/transition" },
+                { label: "Update Profile", desc: "Add courses or interests", href: "/settings" },
+                { label: "Saved Paths", desc: "Review your bookmarks", href: "/saved" },
               ].map((action) => (
-                <button
+                <Link
                   key={action.label}
+                  href={action.href}
                   className="flex items-center gap-2.5 p-3.5 rounded-[10px] border border-border text-left hover:bg-surface hover:border-border-hover transition-all"
                 >
-                  <div>
+                  <div className="flex-1">
                     <div className="text-[13px] font-semibold">
                       {action.label}
                     </div>
@@ -79,7 +81,8 @@ export default function DashboardPage() {
                       {action.desc}
                     </div>
                   </div>
-                </button>
+                  <span className="text-text-primary font-bold text-sm shrink-0">&rarr;</span>
+                </Link>
               ))}
             </div>
           </div>
@@ -91,9 +94,9 @@ export default function DashboardPage() {
           <div className="bg-space-card border border-border rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <span className="text-sm font-semibold">Top Matches</span>
-              <button className="text-xs text-indigo-bright font-medium hover:underline">
+              <Link href="/explore" className="text-xs text-indigo-bright font-medium hover:underline">
                 View All
-              </button>
+              </Link>
             </div>
             <div className="p-5 flex flex-col gap-0.5">
               {[
