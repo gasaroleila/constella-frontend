@@ -67,3 +67,35 @@ export interface SimulationResult {
   totalTransitions: number;
   peakPivotTiming: string;
 }
+
+// Transition page card types
+
+export interface TransitionCourse {
+  name: string;
+  tag: "new" | "dropped" | null;
+}
+
+export interface TransitionTimelineEntry {
+  semester: string;
+  pivot: boolean;
+  courses: TransitionCourse[];
+}
+
+export interface TransitionCard {
+  isTopMatch: boolean;
+  classYear: number;
+  matchPercent: number;
+  fromMajor: string;
+  toMajor: string;
+  outcome: string;
+  prePivotSummary: string;
+  timeline: TransitionTimelineEntry[];
+}
+
+export interface TransitionSimulation {
+  totalTransitions: number;
+  peakTiming: string;
+  topOutcome: string;
+  topOutcomeCount: number;
+  cards: TransitionCard[];
+}

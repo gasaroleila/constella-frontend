@@ -1,17 +1,116 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Constellation } from "@/components/constellation/constellation";
-import { mockConstellationData, CLUSTER_COLORS } from "@/lib/mock-data";
+import { mockConstellationData, CLUSTER_COLORS, filterConstellationData } from "@/lib/mock-data";
 import type { AlumniRecord } from "@/lib/types";
+
+const INTEREST_SUGGESTIONS = [
+  "Biology", "Public Health", "Psychology", "Data Science", "Economics",
+  "Computer Science", "Chemistry", "Mathematics", "Business", "Education",
+  "Sociology", "Political Science", "Health Policy", "Neuroscience", "Design",
+];
+
+const YEAR_OPTIONS = ["Freshman", "Sophomore", "Junior", "Senior"];
+
+const MAJOR_OPTIONS = [
+  "", "Accounting", "Biochemistry", "Biology", "Business", "Chemistry",
+  "Cognitive Science", "CS", "Design", "Economics", "Education", "English",
+  "Finance", "HCI", "Health Policy", "Math", "Molecular Biology",
+  "Psychology", "Public Health", "Statistics",
+];
 
 export default function ExplorePage() {
   const [selectedAlumni, setSelectedAlumni] = useState<AlumniRecord | null>(null);
 
-  const legendItems = mockConstellationData.clusters.map((c) => ({
+  // Filter state
+  const [mode, setMode] = useState<"open" | "focused">("open");
+  const [year, setYear] = useState("Sophomore");
+  const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
+    new Set(["Biology", "Public Health"]),
+  );
+  const [interestQuery, setInterestQuery] = useState("");
+  const [interestDropdownOpen, setInterestDropdownOpen] = useState(false);
+  const [majorFilter, setMajorFilter] = useState("");
+  const [careerArea, setCareerArea] = useState("");
+
+  // Applied filters (updated on "Explore Constellation" click)
+  const [appliedFilters, setAppliedFilters] = useState({
+    interests: ["Biology", "Public Health"],
+    careerArea: "",
+    major: "",
+    mode: "open" as "open" | "focused",
+  });
+
+  // Saved paths
+  const [savedPaths, setSavedPaths] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const stored = localStorage.getItem("constella-saved-paths");
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const constellationData = useMemo(
+    () => filterConstellationData(mockConstellationData, appliedFilters),
+    [appliedFilters],
+  );
+
+  const legendItems = constellationData.clusters.map((c) => ({
     color: CLUSTER_COLORS[c.label] || "#888",
     label: `${c.label} (${c.alumni.length})`,
   }));
+
+  // Interest input helpers
+  const filteredSuggestions = INTEREST_SUGGESTIONS.filter(
+    (s) => !selectedInterests.has(s) && s.toLowerCase().includes(interestQuery.toLowerCase()),
+  );
+
+  const addInterest = (interest: string) => {
+    setSelectedInterests((prev) => new Set(prev).add(interest));
+    setInterestQuery("");
+    setInterestDropdownOpen(false);
+  };
+
+  const removeInterest = (interest: string) => {
+    setSelectedInterests((prev) => {
+      const next = new Set(prev);
+      next.delete(interest);
+      return next;
+    });
+  };
+
+  const handleInterestKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && interestQuery.trim()) {
+      e.preventDefault();
+      addInterest(filteredSuggestions[0] || interestQuery.trim());
+    } else if (e.key === "Backspace" && !interestQuery && selectedInterests.size > 0) {
+      const last = [...selectedInterests].pop()!;
+      removeInterest(last);
+    }
+  };
+
+  const applyFilters = () => {
+    setAppliedFilters({
+      interests: [...selectedInterests],
+      careerArea,
+      major: majorFilter,
+      mode,
+    });
+    setSelectedAlumni(null);
+  };
+
+  const toggleSave = (id: string) => {
+    setSavedPaths((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      localStorage.setItem("constella-saved-paths", JSON.stringify([...next]));
+      return next;
+    });
+  };
 
   return (
     <div className="flex h-[calc(100vh-56px)] -m-7">
@@ -24,72 +123,166 @@ export default function ExplorePage() {
           </p>
           {/* Mode toggle */}
           <div className="flex mt-4 bg-surface border border-border rounded-lg p-[3px]">
-            <button className="flex-1 py-[7px] rounded-md text-xs font-semibold text-center bg-indigo text-white">
+            <button
+              onClick={() => setMode("open")}
+              className={`flex-1 py-[7px] rounded-md text-xs font-semibold text-center transition-colors ${
+                mode === "open"
+                  ? "bg-indigo text-white"
+                  : "text-text-secondary hover:text-text-primary"
+              }`}
+            >
               Open
             </button>
-            <button className="flex-1 py-[7px] rounded-md text-xs font-semibold text-center text-text-secondary">
+            <button
+              onClick={() => setMode("focused")}
+              className={`flex-1 py-[7px] rounded-md text-xs font-semibold text-center transition-colors ${
+                mode === "focused"
+                  ? "bg-indigo text-white"
+                  : "text-text-secondary hover:text-text-primary"
+              }`}
+            >
               Focused
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-[18px]">
-          {/* Year */}
-          <div>
-            <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
-              Your Year
-            </div>
-            <input
-              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo"
-              value="Sophomore"
-              readOnly
-            />
-          </div>
-          {/* Interests */}
-          <div>
-            <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
-              Interests
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {["Biology", "Public Health", "Psychology", "Data Science", "Economics"].map(
-                (tag, i) => (
-                  <button
-                    key={tag}
-                    className={`text-xs px-2.5 py-[5px] rounded-md border transition-all ${
-                      i < 2
-                        ? "bg-indigo/15 border-indigo/30 text-indigo-bright"
-                        : "bg-surface border-border text-text-secondary hover:border-border-hover"
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                )
-              )}
+        {mode === "focused" ? (
+          <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-[18px]">
+            <div>
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
+                Career Area
+              </div>
+              <input
+                className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
+                placeholder="e.g. Health Policy"
+                value={careerArea}
+                onChange={(e) => setCareerArea(e.target.value)}
+              />
+              <p className="text-[11px] text-text-tertiary mt-2">
+                Enter a career area to focus the constellation on matching clusters.
+              </p>
             </div>
           </div>
-          {/* Career area */}
-          <div>
-            <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
-              Career Area
+        ) : (
+          <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-[18px]">
+            {/* Year */}
+            <div>
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
+                Your Year
+              </div>
+              <div className="relative">
+                <select
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo appearance-none cursor-pointer"
+                >
+                  {YEAR_OPTIONS.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-tertiary">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
             </div>
-            <input
-              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
-              placeholder="Any career area"
-            />
-          </div>
-          {/* Major filter */}
-          <div>
-            <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
-              Major Filter
-            </div>
-            <input
-              className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
-              placeholder="Any major"
-            />
-          </div>
-        </div>
 
-        <button className="mx-5 mb-5 py-2.5 rounded-lg bg-indigo text-white text-sm font-semibold hover:bg-indigo-bright transition-colors">
+            {/* Interests */}
+            <div>
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
+                Interests
+              </div>
+              {/* Selected pills */}
+              {selectedInterests.size > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {[...selectedInterests].map((interest) => (
+                    <span
+                      key={interest}
+                      className="text-xs px-2 py-[3px] rounded-md bg-indigo/15 border border-indigo/30 text-indigo-bright flex items-center gap-1"
+                    >
+                      {interest}
+                      <button
+                        onClick={() => removeInterest(interest)}
+                        className="hover:text-white transition-colors"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-2.5 h-2.5">
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {/* Input + dropdown */}
+              <div className="relative">
+                <input
+                  className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
+                  placeholder="Type an interest..."
+                  value={interestQuery}
+                  onChange={(e) => { setInterestQuery(e.target.value); setInterestDropdownOpen(true); }}
+                  onFocus={() => setInterestDropdownOpen(true)}
+                  onBlur={() => setTimeout(() => setInterestDropdownOpen(false), 150)}
+                  onKeyDown={handleInterestKeyDown}
+                />
+                {interestDropdownOpen && filteredSuggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 mt-1 bg-space-card border border-border rounded-lg shadow-lg z-10 max-h-[160px] overflow-y-auto">
+                    {filteredSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => addInterest(s)}
+                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:bg-surface hover:text-text-primary transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Major filter */}
+            <div>
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
+                Major Filter
+              </div>
+              <div className="relative">
+                <select
+                  value={majorFilter}
+                  onChange={(e) => setMajorFilter(e.target.value)}
+                  className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo appearance-none cursor-pointer"
+                >
+                  <option value="">Any major</option>
+                  {MAJOR_OPTIONS.filter(Boolean).map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-tertiary">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Career area */}
+            <div>
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2">
+                Career Area{" "}
+                <span className="font-normal normal-case tracking-normal">(optional)</span>
+              </div>
+              <input
+                className="w-full px-3 py-[9px] rounded-lg bg-surface border border-border text-[13px] outline-none focus:border-indigo placeholder:text-text-tertiary"
+                placeholder="Any career area"
+                value={careerArea}
+                onChange={(e) => setCareerArea(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+
+        <button
+          onClick={applyFilters}
+          className="mx-5 mb-5 py-2.5 rounded-lg bg-indigo text-white text-sm font-semibold hover:bg-indigo-bright transition-colors"
+        >
           Explore Constellation
         </button>
       </div>
@@ -97,7 +290,7 @@ export default function ExplorePage() {
       {/* Constellation canvas */}
       <div className="flex-1 relative overflow-hidden">
         <Constellation
-          data={mockConstellationData}
+          data={constellationData}
           onSelectAlumni={setSelectedAlumni}
           selectedAlumniId={selectedAlumni?.id}
         />
@@ -145,9 +338,30 @@ export default function ExplorePage() {
             <div className="text-[13px] text-text-secondary">
               {selectedAlumni.careerOutcome.title} @ {selectedAlumni.careerOutcome.industry}
             </div>
+
+            {/* Save/Unsave button */}
+            <button
+              onClick={() => toggleSave(selectedAlumni.id)}
+              className={`mt-3 w-full py-2 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 ${
+                savedPaths.has(selectedAlumni.id)
+                  ? "bg-indigo/15 text-indigo-bright border border-indigo/30"
+                  : "bg-surface border border-border text-text-secondary hover:border-border-hover"
+              }`}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill={savedPaths.has(selectedAlumni.id) ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="w-3.5 h-3.5"
+              >
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              {savedPaths.has(selectedAlumni.id) ? "Saved" : "Save Path"}
+            </button>
           </div>
 
-          {/* Timeline placeholder — real data comes from backend */}
+          {/* Timeline */}
           <div className="p-5">
             <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-4">
               Academic Journey
@@ -227,7 +441,7 @@ export default function ExplorePage() {
                   >
                     {act}
                   </span>
-                )
+                ),
               )}
             </div>
           </div>

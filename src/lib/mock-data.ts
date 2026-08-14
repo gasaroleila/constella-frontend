@@ -1,4 +1,4 @@
-import type { AlumniRecord, Cluster, ConstellationData } from "./types";
+import type { AlumniRecord, Cluster, ConstellationData, TransitionCard, TransitionSimulation } from "./types";
 
 const clusterColors: Record<string, string> = {
   "Health Policy": "#34D399",
@@ -88,3 +88,119 @@ export const mockConstellationData: ConstellationData = (() => {
     summary: "50 alumni across 6 career clusters",
   };
 })();
+
+// Interest-to-cluster mapping for explore filters
+const INTEREST_CLUSTERS: Record<string, string[]> = {
+  "Biology": ["Health Policy", "Biotech"],
+  "Public Health": ["Health Policy"],
+  "Psychology": ["UX Research", "Education"],
+  "Data Science": ["Data Science"],
+  "Economics": ["Finance"],
+};
+
+export function filterConstellationData(
+  data: ConstellationData,
+  filters: { interests: string[]; careerArea: string; major: string; mode: "open" | "focused" },
+): ConstellationData {
+  let clusters = data.clusters;
+
+  if (filters.mode === "focused") {
+    // Focused mode: filter only by career area
+    if (filters.careerArea) {
+      const q = filters.careerArea.toLowerCase();
+      clusters = clusters.filter((c) => c.label.toLowerCase().includes(q));
+    }
+  } else {
+    // Open mode: all filters optional, apply any that are set
+    if (filters.interests.length > 0) {
+      const matched = new Set(filters.interests.flatMap((i) => INTEREST_CLUSTERS[i] || []));
+      if (matched.size > 0) {
+        clusters = clusters.filter((c) => matched.has(c.label));
+      }
+    }
+
+    if (filters.careerArea) {
+      const q = filters.careerArea.toLowerCase();
+      clusters = clusters.filter((c) => c.label.toLowerCase().includes(q));
+    }
+
+    if (filters.major) {
+      const q = filters.major.toLowerCase();
+      clusters = clusters
+        .map((c) => ({
+          ...c,
+          alumni: c.alumni.filter((a) => a.majors.some((m) => m.toLowerCase().includes(q))),
+        }))
+        .filter((c) => c.alumni.length > 0);
+    }
+  }
+
+  const totalAlumni = clusters.reduce((s, c) => s + c.alumni.length, 0);
+  return {
+    clusters,
+    totalAlumni,
+    summary: `${totalAlumni} alumni across ${clusters.length} career clusters`,
+  };
+}
+
+export function generateMockSimulation(fromMajor: string, toMajor: string): TransitionSimulation {
+  const cardCount = 3 + Math.floor(Math.random() * 3);
+  const totalTransitions = cardCount + 4 + Math.floor(Math.random() * 8);
+  const pivotTimings = ["Sophomore Spring", "Junior Fall", "Junior Spring", "Sophomore Fall"];
+
+  const outcomes = [
+    `${toMajor} Researcher @ WHO`,
+    `${toMajor} Analyst @ CDC`,
+    `Senior ${toMajor} Specialist`,
+    `${toMajor} Program Manager`,
+    `${toMajor} Consultant @ Deloitte`,
+  ];
+
+  const cards: TransitionCard[] = Array.from({ length: cardCount }, (_, i) => {
+    const pivotSem = pivotTimings[i % pivotTimings.length];
+    return {
+      isTopMatch: i === 0,
+      classYear: 2024 - i,
+      matchPercent: Math.round(94 - i * 4 - Math.random() * 3),
+      fromMajor,
+      toMajor,
+      outcome: outcomes[i % outcomes.length],
+      prePivotSummary: `Pre-pivot (${2 + i} semesters): ${fromMajor} 101, Stats, Intro ${fromMajor}`,
+      timeline: [
+        {
+          semester: `${pivotSem} \u2014 PIVOT`,
+          pivot: true,
+          courses: [
+            { name: `Intro ${toMajor}`, tag: "new" },
+            { name: `${toMajor} Methods`, tag: "new" },
+            { name: `Adv. ${fromMajor}`, tag: "dropped" },
+          ],
+        },
+        {
+          semester: "Junior Spring",
+          pivot: false,
+          courses: [
+            { name: `${toMajor} Seminar`, tag: "new" },
+            { name: `Applied ${toMajor}`, tag: null },
+          ],
+        },
+        {
+          semester: "Senior Year",
+          pivot: false,
+          courses: [
+            { name: `${toMajor} Capstone`, tag: null },
+            { name: "Research Thesis", tag: null },
+          ],
+        },
+      ],
+    };
+  });
+
+  return {
+    totalTransitions,
+    peakTiming: "sophomore and junior year",
+    topOutcome: toMajor,
+    topOutcomeCount: Math.ceil(totalTransitions * 0.4),
+    cards,
+  };
+}
