@@ -1,4 +1,4 @@
-import type { AlumniRecord, Cluster, ConstellationData, TransitionCard, TransitionSimulation } from "./types";
+import type { AlumniRecord, Cluster, ConstellationData, SavedPath, TransitionCard, TransitionSimulation } from "./types";
 
 const clusterColors: Record<string, string> = {
   "Health Policy": "#34D399",
@@ -204,3 +204,95 @@ export function generateMockSimulation(fromMajor: string, toMajor: string): Tran
     cards,
   };
 }
+
+// Create Path page data
+
+export const PATH_COLORS = ["#34D399", "#FBBF24", "#FB7185", "#A78BFA", "#67E8F9", "#F97316"];
+export const PATH_COLORS_LIGHT = ["#059669", "#D97706", "#E11D48", "#7C3AED", "#0891B2", "#EA580C"];
+
+export const MOCK_SAVED_PATHS: SavedPath[] = [
+  {
+    id: 1, match: 94, color: 0,
+    major: "Biochem + Public Health",
+    outcome: "Health Policy Analyst @ State Dept",
+    classYear: 2022,
+    courses: ["Bio 101", "Chem 101", "Organic Chem", "Intro PH", "Epidemiology", "Health Policy", "Biostatistics", "Community Health"],
+    semesters: {
+      Freshman: ["Bio 101", "Chem 101", "Intro Psych"],
+      Sophomore: ["Organic Chem", "Physics", "Intro Public Health"],
+      Junior: ["Epidemiology", "Health Policy", "Biostatistics"],
+      Senior: ["Community Health", "Capstone: Health Equity"],
+    },
+    outcomeField: "Health Policy",
+  },
+  {
+    id: 2, match: 91, color: 1,
+    major: "Psychology + HCI",
+    outcome: "UX Researcher @ Google",
+    classYear: 2023,
+    courses: ["Intro Psych", "Cognitive Psych", "Stats", "HCI", "User Research", "Design Thinking", "Data Viz"],
+    semesters: {
+      Freshman: ["Intro Psych", "Sociology 101", "Stats I"],
+      Sophomore: ["Cognitive Psych", "Research Methods", "HCI Intro"],
+      Junior: ["User Research", "Design Thinking", "Data Viz"],
+      Senior: ["UX Capstone", "Cognitive Science Thesis"],
+    },
+    outcomeField: "UX Research",
+  },
+  {
+    id: 3, match: 88, color: 2,
+    major: "Stats + CS",
+    outcome: "Data Scientist @ Spotify",
+    classYear: 2021,
+    courses: ["Calc I", "Stats I", "Intro CS", "Prob Theory", "ML", "Data Structures", "Applied ML", "Big Data"],
+    semesters: {
+      Freshman: ["Calc I", "Stats I", "Intro CS"],
+      Sophomore: ["Calc II", "Prob Theory", "Data Structures"],
+      Junior: ["ML", "Linear Algebra", "Applied Stats"],
+      Senior: ["Applied ML", "Big Data", "CS Thesis"],
+    },
+    outcomeField: "Data Science",
+  },
+  {
+    id: 4, match: 85, color: 3,
+    major: "Biology + Business",
+    outcome: "Biotech Startup Founder",
+    classYear: 2020,
+    courses: ["Bio 101", "Chem 101", "Genetics", "Molecular Bio", "Entrepreneurship", "Business Strategy"],
+    semesters: {
+      Freshman: ["Bio 101", "Chem 101", "Econ 101"],
+      Sophomore: ["Genetics", "Organic Chem", "Intro Business"],
+      Junior: ["Molecular Bio", "Entrepreneurship", "Marketing"],
+      Senior: ["Business Strategy", "Biotech Seminar", "Startup Lab"],
+    },
+    outcomeField: "Biotech",
+  },
+  {
+    id: 5, match: 82, color: 4,
+    major: "Public Health + Econ",
+    outcome: "Health Data Analyst @ McKinsey",
+    classYear: 2021,
+    courses: ["Econ 101", "Stats", "Intro PH", "Micro", "Health Economics", "Epidemiology", "Cost-Benefit"],
+    semesters: {
+      Freshman: ["Econ 101", "Stats I", "Sociology 101"],
+      Sophomore: ["Micro", "Macro", "Intro Public Health"],
+      Junior: ["Health Economics", "Epidemiology", "Econometrics"],
+      Senior: ["Cost-Benefit in Health", "PH Capstone", "Consulting Practicum"],
+    },
+    outcomeField: "Health Economics",
+  },
+  {
+    id: 6, match: 79, color: 5,
+    major: "Economics + Public Health",
+    outcome: "Policy Analyst @ Brookings",
+    classYear: 2023,
+    courses: ["Econ 101", "Stats", "Micro", "Macro", "Health Policy", "Public Policy", "Econometrics"],
+    semesters: {
+      Freshman: ["Econ 101", "Calc I", "Intro Political Sci"],
+      Sophomore: ["Micro", "Macro", "Stats II"],
+      Junior: ["Public Policy", "Health Policy", "Econometrics"],
+      Senior: ["Policy Analysis", "Senior Thesis", "Research Methods"],
+    },
+    outcomeField: "Policy",
+  },
+];

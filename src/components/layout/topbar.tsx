@@ -7,7 +7,7 @@ const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/explore": "Explore",
   "/transition": "Transition",
-  "/saved": "Saved Paths",
+  "/create-path": "Create Path",
   "/settings": "Settings",
 };
 

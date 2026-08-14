@@ -66,7 +66,7 @@ export default function DashboardPage() {
                 { label: "Open Explore", desc: "Browse all alumni paths", href: "/explore" },
                 { label: "Simulate a Pivot", desc: "What if you switched?", href: "/transition" },
                 { label: "Update Profile", desc: "Add courses or interests", href: "/settings" },
-                { label: "Saved Paths", desc: "Review your bookmarks", href: "/saved" },
+                { label: "Create Path", desc: "Combine alumni paths", href: "/create-path" },
               ].map((action) => (
                 <Link
                   key={action.label}

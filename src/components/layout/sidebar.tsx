@@ -46,11 +46,12 @@ const navItems = [
 
 const secondaryItems = [
   {
-    label: "Saved Paths",
-    href: "/saved",
+    label: "Create Path",
+    href: "/create-path",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" />
+        <path d="M12 5v14M5 12h14" />
+        <rect x="3" y="3" width="18" height="18" rx="3" />
       </svg>
     ),
   },

@@ -68,6 +68,20 @@ export interface SimulationResult {
   peakPivotTiming: string;
 }
 
+// Saved path for Create Path page
+
+export interface SavedPath {
+  id: number;
+  match: number;
+  color: number;
+  major: string;
+  outcome: string;
+  classYear: number;
+  courses: string[];
+  semesters: Record<string, string[]>;
+  outcomeField: string;
+}
+
 // Transition page card types
 
 export interface TransitionCourse {
