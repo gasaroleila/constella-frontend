@@ -3,8 +3,19 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Constella",
-  description: "Discover the path worth taking.",
+  title: "Constella — See what students like you actually did",
+  description: "Explore real alumni journeys, simulate major pivots, and discover career paths matched to your profile.",
+  openGraph: {
+    title: "Constella",
+    description: "Explore real alumni journeys, simulate major pivots, and discover career paths matched to your profile.",
+    siteName: "Constella",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Constella",
+    description: "See what students like you actually did.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
