@@ -79,7 +79,7 @@ export default function TransitionPage() {
       )}
 
       {/* Summary bar */}
-      {simulation && (
+      {simulation && simulation.cards.length > 0 && (
         <div className="bg-indigo/15 border border-indigo/30 rounded-[10px] px-[18px] py-3.5 text-sm flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-indigo flex items-center justify-center shrink-0">
             <svg
@@ -185,7 +185,7 @@ export default function TransitionPage() {
       )}
 
       {/* Empty state */}
-      {!simulation && (
+      {!simulation && !loading && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="w-16 h-16 rounded-2xl bg-indigo/15 flex items-center justify-center mb-4">
             <svg
@@ -205,6 +205,16 @@ export default function TransitionPage() {
           <p className="text-sm text-text-tertiary max-w-[300px]">
             Enter your current and target majors above, then click Simulate to
             see alumni who made the same pivot.
+          </p>
+        </div>
+      )}
+
+      {/* No results */}
+      {simulation && simulation.cards.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <h3 className="text-base font-bold mb-1">No transitions found</h3>
+          <p className="text-sm text-text-tertiary max-w-[300px]">
+            No alumni matched this pivot. Try different majors.
           </p>
         </div>
       )}
