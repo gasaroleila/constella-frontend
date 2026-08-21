@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Constellation } from "@/components/constellation/constellation";
-import { mockConstellationData, CLUSTER_COLORS, filterConstellationData } from "@/lib/mock-data";
-import type { AlumniRecord } from "@/lib/types";
+import { CLUSTER_COLORS } from "@/lib/mock-data";
+import { explore } from "@/lib/api";
+import { useAuthStore } from "@/stores/auth";
+import type { AlumniRecord, ConstellationData } from "@/lib/types";
 
 const INTEREST_SUGGESTIONS = [
   "Biology", "Public Health", "Psychology", "Data Science", "Economics",
@@ -21,6 +23,7 @@ const MAJOR_OPTIONS = [
 ];
 
 export default function ExplorePage() {
+  const token = useAuthStore((s) => s.token);
   const [selectedAlumni, setSelectedAlumni] = useState<AlumniRecord | null>(null);
 
   // Filter state
@@ -45,15 +48,38 @@ export default function ExplorePage() {
     }
   });
 
-  const constellationData = useMemo(
-    () => filterConstellationData(mockConstellationData, {
-      interests: [...selectedInterests],
-      careerArea,
-      major: majorFilter,
-      mode,
-    }),
-    [selectedInterests, careerArea, majorFilter, mode],
-  );
+  // API state
+  const [constellationData, setConstellationData] = useState<ConstellationData>({
+    clusters: [], totalAlumni: 0, summary: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Debounced fetch from backend
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const fetchConstellation = useCallback(async () => {
+    if (!token) return;
+    setLoading(true);
+    setError("");
+    try {
+      const data = await explore(token, {
+        interests: [...selectedInterests],
+        careerArea,
+        major: majorFilter,
+      });
+      setConstellationData(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load constellation");
+    } finally {
+      setLoading(false);
+    }
+  }, [token, selectedInterests, careerArea, majorFilter]);
+
+  useEffect(() => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(fetchConstellation, 300);
+    return () => clearTimeout(timerRef.current);
+  }, [fetchConstellation]);
 
   const legendItems = constellationData.clusters.map((c) => ({
     color: CLUSTER_COLORS[c.label] || "#888",
@@ -270,6 +296,18 @@ export default function ExplorePage() {
 
       {/* Constellation canvas */}
       <div className="flex-1 relative overflow-hidden">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center z-10 bg-space/60">
+            <div className="text-sm text-text-secondary">Loading constellation...</div>
+          </div>
+        )}
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="text-sm text-red-400 bg-space-card border border-border rounded-lg px-4 py-3">
+              {error}
+            </div>
+          </div>
+        )}
         <Constellation
           data={constellationData}
           onSelectAlumni={setSelectedAlumni}
@@ -347,21 +385,7 @@ export default function ExplorePage() {
             <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-4">
               Academic Journey
             </div>
-            {[
-              { semester: "Freshman Fall", courses: ["Intro Course A", "Intro Course B", "Gen Ed"], pivot: false },
-              { semester: "Sophomore Fall", courses: [{ name: "Exploratory Course", tag: "new" as const }], pivot: false },
-              ...(selectedAlumni.pivotPoints?.length
-                ? [{
-                    semester: `${selectedAlumni.pivotPoints[0].semester} — PIVOT`,
-                    courses: [
-                      { name: selectedAlumni.pivotPoints[0].toMajor + " Intro", tag: "new" as const },
-                      { name: selectedAlumni.pivotPoints[0].fromMajor + " Adv.", tag: "dropped" as const },
-                    ],
-                    pivot: true,
-                  }]
-                : []),
-              { semester: "Senior Year", courses: ["Capstone", "Internship"], pivot: false },
-            ].map((item, i, arr) => (
+            {buildTimeline(selectedAlumni).map((item, i, arr) => (
               <div key={i} className="flex gap-3.5 pb-4 last:pb-0">
                 <div className="flex flex-col items-center shrink-0 w-4">
                   <div
@@ -384,50 +408,72 @@ export default function ExplorePage() {
                     {item.semester}
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {item.courses.map((course) => {
-                      const name = typeof course === "string" ? course : course.name;
-                      const tag = typeof course === "string" ? null : course.tag;
-                      return (
-                        <span
-                          key={name}
-                          className={`text-[11px] px-2 py-[3px] rounded ${
-                            tag === "new"
-                              ? "bg-indigo/15 text-indigo-bright"
-                              : tag === "dropped"
-                                ? "bg-surface text-text-secondary line-through opacity-40"
-                                : "bg-surface text-text-secondary"
-                          }`}
-                        >
-                          {name}
-                        </span>
-                      );
-                    })}
+                    {item.courses.map((course) => (
+                      <span
+                        key={course.name}
+                        className={`text-[11px] px-2 py-[3px] rounded ${
+                          course.tag === "new"
+                            ? "bg-indigo/15 text-indigo-bright"
+                            : course.tag === "dropped"
+                              ? "bg-surface text-text-secondary line-through opacity-40"
+                              : "bg-surface text-text-secondary"
+                        }`}
+                      >
+                        {course.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Activities */}
-          <div className="px-5 py-4 border-t border-border">
-            <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2.5">
-              Activities
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {["Research Club", "Internship Program", "Study Abroad"].map(
-                (act) => (
+          {/* Interests */}
+          {selectedAlumni.interests.length > 0 && (
+            <div className="px-5 py-4 border-t border-border">
+              <div className="text-[11px] font-bold text-text-tertiary uppercase tracking-[1.5px] mb-2.5">
+                Interests
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {selectedAlumni.interests.map((interest) => (
                   <span
-                    key={act}
+                    key={interest}
                     className="text-[11px] px-2.5 py-1 rounded-md bg-surface text-text-secondary border border-border"
                   >
-                    {act}
+                    {interest}
                   </span>
-                ),
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
   );
+}
+
+function semesterOrder(label: string): number {
+  const parts = label.toLowerCase();
+  const years: Record<string, number> = { freshman: 0, sophomore: 1, junior: 2, senior: 3 };
+  const terms: Record<string, number> = { fall: 0, spring: 1, summer: 2 };
+  let order = 0;
+  for (const [k, v] of Object.entries(years)) { if (parts.includes(k)) { order += v * 10; break; } }
+  for (const [k, v] of Object.entries(terms)) { if (parts.includes(k)) { order += v; break; } }
+  return order;
+}
+
+function buildTimeline(alumni: AlumniRecord) {
+  const semesters = Object.entries(alumni.coursesBySemester || {}).sort(
+    ([a], [b]) => semesterOrder(a) - semesterOrder(b),
+  );
+  const pivotSemesters = new Set((alumni.pivotPoints || []).map((p) => p.semester));
+
+  return semesters.map(([semester, courses]) => ({
+    semester: pivotSemesters.has(semester) ? `${semester} — PIVOT` : semester,
+    pivot: pivotSemesters.has(semester),
+    courses: courses.map((c) => ({
+      name: c.name,
+      tag: c.status === "kept" ? null : (c.status as "new" | "dropped" | null),
+    })),
+  }));
 }
