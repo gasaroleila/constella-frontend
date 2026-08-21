@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth";
+import { ConstellaIcon } from "@/components/ui/constella-icon";
 
 const navItems = [
   {
@@ -66,8 +67,9 @@ export function Sidebar() {
 
   return (
     <nav className="w-[220px] h-screen shrink-0 bg-space border-r border-border flex flex-col py-5">
-      <div className="text-[19px] font-bold tracking-tight px-5 mb-8">
-        Constella
+      <div className="flex items-center gap-2.5 px-5 mb-8">
+        <ConstellaIcon className="w-7 h-7" />
+        <span className="text-[19px] font-bold tracking-tight">Constella</span>
       </div>
 
       <div className="flex-1 flex flex-col gap-0.5 px-2">

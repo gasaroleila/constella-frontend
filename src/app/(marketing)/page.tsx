@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
+import { ConstellaIcon } from "@/components/ui/constella-icon";
 
 export default function LandingPage() {
   return (
     <div className="overflow-x-hidden">
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-12 py-5 transition-all max-md:px-6">
-        <span className="text-[22px] font-bold tracking-tight">Constella</span>
+        <span className="flex items-center gap-2 text-[22px] font-bold tracking-tight">
+          <ConstellaIcon className="w-7 h-7" />
+          Constella
+        </span>
         <div className="flex items-center gap-8">
           <Link
             href="#features"
@@ -575,7 +579,8 @@ export default function LandingPage() {
       <footer className="bg-space px-12 pt-16 pb-8 border-t border-border max-md:px-6">
         <div className="max-w-[1120px] mx-auto grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-12 max-md:grid-cols-2 max-sm:grid-cols-1">
           <div>
-            <div className="text-[22px] font-bold tracking-tight">
+            <div className="flex items-center gap-2 text-[22px] font-bold tracking-tight">
+              <ConstellaIcon className="w-7 h-7" />
               Constella
             </div>
             <p className="text-sm text-text-secondary leading-relaxed mt-3 max-w-[260px]">
