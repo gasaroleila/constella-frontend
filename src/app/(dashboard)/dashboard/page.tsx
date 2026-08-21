@@ -1,27 +1,54 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
+import { getDashboardStats, type DashboardStats } from "@/lib/api";
+import { useAuthStore } from "@/stores/auth";
+
+const MOCK_STATS: DashboardStats = {
+  alumniMatches: 47,
+  clustersExplored: 5,
+  highestMatch: 94,
+  savedPaths: 8,
+};
 
 export default function DashboardPage() {
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+  const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
+
+  useEffect(() => {
+    if (!token) return;
+    getDashboardStats(token)
+      .then((data) => {
+        const hasData = data.alumniMatches > 0 || data.clustersExplored > 0;
+        setStats(hasData ? data : MOCK_STATS);
+      })
+      .catch(() => {});
+  }, [token]);
+
+  const firstName = user?.firstName ?? "Alex";
+
   return (
     <>
       {/* Greeting */}
       <div className="mb-7">
         <h1 className="text-2xl font-bold tracking-tight mb-1">
-          Welcome back, Alex
+          Welcome back, {firstName}
         </h1>
         <p className="text-sm text-text-secondary">
-          Here&apos;s what Constella has found for you. You have 3 new matches
-          since last week.
+          Here&apos;s what Constella has found for you.
         </p>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-3.5 mb-7">
         {[
-          { label: "Alumni Matches", value: "47", change: "+3 this week", color: "indigo" },
-          { label: "Clusters Explored", value: "5 / 7", change: "2 remaining", color: "green" },
-          { label: "Highest Match", value: "94%", change: "Health Policy cluster", color: "amber" },
-          { label: "Saved Paths", value: "8", change: "3 transitions saved", color: "rose" },
+          { label: "Alumni Matches", value: String(stats.alumniMatches), change: "" },
+          { label: "Clusters Explored", value: String(stats.clustersExplored), change: "" },
+          { label: "Highest Match", value: `${Math.round(stats.highestMatch)}%`, change: "" },
+          { label: "Saved Paths", value: String(stats.savedPaths), change: "" },
         ].map((stat) => (
           <div
             key={stat.label}
