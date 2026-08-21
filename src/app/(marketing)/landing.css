@@ -1,0 +1,260 @@
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.from-right {
+  transform: translateX(36px);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Demo section */
+.demo-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: scale(0.97);
+  pointer-events: none;
+  padding: 40px;
+}
+.demo-frame.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+@keyframes cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.demo-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 22px;
+  background: var(--color-indigo-bright);
+  border-radius: 1px;
+  animation: cursor-blink 0.8s ease infinite;
+  vertical-align: middle;
+  margin-left: 1px;
+}
+
+.demo-dropdown {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.demo-dropdown.visible {
+  opacity: 1;
+  transform: none;
+}
+.demo-dropdown-item.highlighted {
+  background: color-mix(in srgb, var(--color-indigo) 8%, transparent);
+}
+
+.demo-node {
+  opacity: 0;
+  transform-origin: center;
+  transform: scale(0);
+  transition: opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.demo-node.materialized {
+  opacity: 1;
+  transform: scale(1);
+}
+.demo-line {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.2s;
+}
+.demo-line.materialized {
+  opacity: 1;
+}
+.demo-label {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  fill: var(--color-text-tertiary);
+}
+.demo-label.materialized {
+  opacity: 1;
+}
+
+@keyframes you-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.you-glow {
+  animation: you-pulse 2.5s ease-in-out infinite;
+}
+.you-label-text {
+  font-size: 11px;
+  font-weight: 800;
+  fill: var(--color-text-primary);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.you-label-text.materialized {
+  opacity: 1;
+}
+
+@keyframes highlight-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.demo-highlight-ring {
+  animation: highlight-pulse 1.5s ease-in-out infinite;
+}
+
+.alumni-card {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%) translateX(20px);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.4s,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+}
+.demo-frame.active .alumni-card {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.demo-step-btn.active {
+  background: color-mix(in srgb, var(--color-indigo) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-indigo) 20%, transparent);
+  color: var(--color-indigo-bright);
+}
+.demo-step-btn.active .demo-step-num {
+  background: var(--color-indigo);
+  border-color: var(--color-indigo);
+  color: #fff;
+}
+
+/* Scroll-driven tool explorer */
+.sky-section {
+  position: relative;
+  height: 350vh;
+  background: var(--color-space);
+}
+.sky-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sky-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tool-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.tool-slide.active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.tool-bullets li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-indigo-bright);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.sky-progress-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  transition: color 0.4s;
+}
+.sky-progress-dot.active::after {
+  color: var(--color-text-secondary);
+}
+
+
+@media (max-width: 768px) {
+  .demo-frame {
+    padding: 24px;
+  }
+  .alumni-card {
+    right: 16px;
+    width: 220px !important;
+    padding: 20px !important;
+  }
+  .demo-step-title {
+    display: none;
+  }
+  .sky-section .sky-body {
+    flex-direction: column;
+    padding: 20px 24px 40px;
+    gap: 24px;
+  }
+  .sky-section .sky-detail {
+    width: 100%;
+  }
+  .sky-section .sky-header {
+    padding: 60px 24px 16px;
+  }
+  .sky-section .sky-progress {
+    display: none;
+  }
+}
