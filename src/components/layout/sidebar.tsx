@@ -62,6 +62,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
 
   return (
     <nav className="w-[220px] h-screen shrink-0 bg-space border-r border-border flex flex-col py-5">
@@ -106,12 +107,12 @@ export function Sidebar() {
       {/* User profile */}
       <div className="flex items-center gap-2.5 px-5 pt-4 border-t border-border">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo to-indigo-bright flex items-center justify-center text-[13px] font-bold text-white shrink-0">
-          AJ
+          {user ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}` : "?"}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-semibold">Alex Johnson</div>
+          <div className="text-[13px] font-semibold">{user ? `${user.firstName} ${user.lastName}` : "Guest"}</div>
           <div className="text-[11px] text-text-tertiary truncate">
-            University of Michigan
+            {user?.school ?? ""}
           </div>
         </div>
         <button
