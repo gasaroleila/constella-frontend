@@ -102,10 +102,10 @@ export default function LandingPage() {
       <div className="px-12 py-12 border-y border-border max-md:px-6">
         <div className="max-w-[900px] mx-auto flex justify-center gap-16 flex-wrap max-md:gap-8">
           {[
-            { number: "68+", label: "Alumni paths mapped" },
+            { number: "68+", label: "Alumni paths" },
             { number: "7", label: "Career clusters" },
-            { number: "92%", label: "Match accuracy" },
-            { number: "4.8", label: "Student rating" },
+            { number: "5", label: "Matching signals" },
+            { number: "3", label: "Discovery tools" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-4xl font-bold text-indigo tracking-tight tabular-nums">

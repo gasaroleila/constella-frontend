@@ -43,7 +43,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             {[
               { number: "68+", label: "Alumni paths" },
               { number: "7", label: "Career clusters" },
-              { number: "92%", label: "Match accuracy" },
+              { number: "5", label: "Matching signals" },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-2xl font-bold text-indigo-bright tabular-nums">
