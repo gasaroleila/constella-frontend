@@ -28,6 +28,16 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json();
 }
 
+// Schools (public)
+export interface School {
+  id: string;
+  name: string;
+}
+
+export async function getSchools() {
+  return request<School[]>("/api/students/schools");
+}
+
 // Auth
 export async function login(email: string, password: string) {
   return request<{ token: string }>("/auth/login", {
@@ -41,6 +51,7 @@ export async function signup(data: {
   lastName: string;
   email: string;
   password: string;
+  schoolId: string;
 }) {
   return request<{ token: string }>("/auth/signup", {
     method: "POST",
