@@ -3,12 +3,18 @@
 
 import type {
   ConstellationData,
-  SimulationQuery,
-  SimulationResult,
   StudentProfile,
+  TransitionSimulation,
 } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
+function authHeaders(token: string): HeadersInit {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -16,7 +22,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
   });
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.detail ?? `API error: ${res.status} ${res.statusText}`);
   }
   return res.json();
 }
@@ -44,17 +51,14 @@ export async function signup(data: {
 // Student profile
 export async function getProfile(token: string) {
   return request<StudentProfile>("/me", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: authHeaders(token),
   });
 }
 
 // Cohort matching — constellation data
 export async function explore(
   token: string,
-  params: { interests?: string[]; careerArea?: string; major?: string }
+  params: { interests?: string[]; careerArea?: string; major?: string },
 ) {
   const query = new URLSearchParams();
   if (params.interests?.length)
@@ -63,21 +67,32 @@ export async function explore(
   if (params.major) query.set("major", params.major);
 
   return request<ConstellationData>(`/explore?${query}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: authHeaders(token),
   });
 }
 
 // What If simulator
-export async function simulate(token: string, query: SimulationQuery) {
-  return request<SimulationResult>("/simulate", {
+export async function simulate(
+  token: string,
+  query: { fromMajor: string; toMajor: string },
+) {
+  return request<TransitionSimulation>("/simulate", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: authHeaders(token),
     body: JSON.stringify(query),
+  });
+}
+
+// Dashboard stats
+export interface DashboardStats {
+  alumniMatches: number;
+  clustersExplored: number;
+  highestMatch: number;
+  savedPaths: number;
+}
+
+export async function getDashboardStats(token: string) {
+  return request<DashboardStats>("/dashboard/stats", {
+    headers: authHeaders(token),
   });
 }

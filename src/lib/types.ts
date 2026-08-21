@@ -56,18 +56,6 @@ export interface ConstellationData {
   summary: string;
 }
 
-export interface SimulationQuery {
-  fromMajor: string;
-  toMajor: string;
-}
-
-export interface SimulationResult {
-  constellation: ConstellationData;
-  summary: string;
-  totalTransitions: number;
-  peakPivotTiming: string;
-}
-
 // Saved path for Create Path page
 
 export interface SavedPath {
