@@ -3,10 +3,19 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signup, getProfile } from "@/lib/api";
+import { useAuthStore } from "@/stores/auth";
 
 export default function SignupPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const setAuth = useAuthStore((s) => s.setAuth);
 
   return (
     <div className="flex-1 flex flex-col justify-center px-9 max-w-[420px] mx-auto w-full">
@@ -31,7 +40,7 @@ export default function SignupPage() {
       </div>
 
       {/* Google OAuth */}
-      <button onClick={() => router.push("/dashboard")} className="flex items-center justify-center gap-2.5 w-full py-3 rounded-[10px] border border-border bg-surface text-text-primary text-sm font-semibold hover:bg-space-hover hover:border-border-hover transition-all mb-6">
+      <button onClick={() => { window.location.href = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/auth/google`; }} className="flex items-center justify-center gap-2.5 w-full py-3 rounded-[10px] border border-border bg-surface text-text-primary text-sm font-semibold hover:bg-space-hover hover:border-border-hover transition-all mb-6">
         <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] shrink-0">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -48,13 +57,34 @@ export default function SignupPage() {
         <div className="flex-1 h-px bg-border" />
       </div>
 
+      {error && (
+        <p className="text-sm text-red-400 mb-2">{error}</p>
+      )}
+
       {/* Form */}
-      <form className="flex flex-col gap-4 mb-6" onSubmit={(e) => { e.preventDefault(); router.push("/dashboard"); }}>
+      <form className="flex flex-col gap-4 mb-6" onSubmit={async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+          const { token } = await signup({ firstName, lastName, email, password });
+          const user = await getProfile(token);
+          setAuth(token, user);
+          router.push("/dashboard");
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Signup failed");
+        } finally {
+          setLoading(false);
+        }
+      }}>
         <div className="flex gap-3">
           <label className="flex flex-col gap-1.5 flex-1">
             <span className="text-[13px] font-semibold text-text-secondary">First name</span>
             <input
               type="text"
+              required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               placeholder="Alex"
               className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
@@ -63,6 +93,9 @@ export default function SignupPage() {
             <span className="text-[13px] font-semibold text-text-secondary">Last name</span>
             <input
               type="text"
+              required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               placeholder="Johnson"
               className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
@@ -72,6 +105,9 @@ export default function SignupPage() {
           <span className="text-[13px] font-semibold text-text-secondary">School email</span>
           <input
             type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="alex@umich.edu"
             className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
@@ -81,7 +117,11 @@ export default function SignupPage() {
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Min. 8 characters"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Min. 6 characters"
               className="w-full px-3.5 py-3 pr-11 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
             <button
@@ -98,9 +138,10 @@ export default function SignupPage() {
         </label>
         <button
           type="submit"
-          className="mt-2 py-3.5 bg-indigo text-white rounded-[10px] text-[15px] font-semibold hover:bg-indigo-bright hover:-translate-y-px transition-all active:translate-y-0"
+          disabled={loading}
+          className="mt-2 py-3.5 bg-indigo text-white rounded-[10px] text-[15px] font-semibold hover:bg-indigo-bright hover:-translate-y-px transition-all active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none"
         >
-          Create Account
+          {loading ? "Creating account..." : "Create Account"}
         </button>
       </form>
 
