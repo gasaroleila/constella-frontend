@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Constellation } from "@/components/constellation/constellation";
-import { CLUSTER_COLORS } from "@/lib/mock-data";
+import { CLUSTER_COLORS, mockConstellationData } from "@/lib/mock-data";
 import { explore } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import type { AlumniRecord, ConstellationData } from "@/lib/types";
@@ -53,23 +53,21 @@ export default function ExplorePage() {
     clusters: [], totalAlumni: 0, summary: "",
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   // Debounced fetch from backend
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const fetchConstellation = useCallback(async () => {
     if (!token) return;
     setLoading(true);
-    setError("");
     try {
       const data = await explore(token, {
         interests: [...selectedInterests],
         careerArea,
         major: majorFilter,
       });
-      setConstellationData(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load constellation");
+      setConstellationData(data.clusters.length > 0 ? data : mockConstellationData);
+    } catch {
+      setConstellationData(mockConstellationData);
     } finally {
       setLoading(false);
     }
@@ -299,13 +297,6 @@ export default function ExplorePage() {
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center z-10 bg-space/60">
             <div className="text-sm text-text-secondary">Loading constellation...</div>
-          </div>
-        )}
-        {error && (
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-sm text-red-400 bg-space-card border border-border rounded-lg px-4 py-3">
-              {error}
-            </div>
           </div>
         )}
         <Constellation

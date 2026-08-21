@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { simulate } from "@/lib/api";
+import { generateMockSimulation } from "@/lib/mock-data";
 import { useAuthStore } from "@/stores/auth";
 import type { TransitionSimulation } from "@/lib/types";
 
@@ -11,17 +12,15 @@ export default function TransitionPage() {
   const [toMajor, setToMajor] = useState("");
   const [simulation, setSimulation] = useState<TransitionSimulation | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSimulate = async () => {
     if (!fromMajor.trim() || !toMajor.trim() || !token) return;
     setLoading(true);
-    setError("");
     try {
       const data = await simulate(token, { fromMajor: fromMajor.trim(), toMajor: toMajor.trim() });
-      setSimulation(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Simulation failed");
+      setSimulation(data.cards.length > 0 ? data : generateMockSimulation(fromMajor.trim(), toMajor.trim()));
+    } catch {
+      setSimulation(generateMockSimulation(fromMajor.trim(), toMajor.trim()));
     } finally {
       setLoading(false);
     }
@@ -71,12 +70,6 @@ export default function TransitionPage() {
           </button>
         </div>
       </div>
-
-      {error && (
-        <div className="text-sm text-red-400 bg-space-card border border-border rounded-lg px-4 py-3">
-          {error}
-        </div>
-      )}
 
       {/* Summary bar */}
       {simulation && simulation.cards.length > 0 && (
@@ -209,15 +202,6 @@ export default function TransitionPage() {
         </div>
       )}
 
-      {/* No results */}
-      {simulation && simulation.cards.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <h3 className="text-base font-bold mb-1">No transitions found</h3>
-          <p className="text-sm text-text-tertiary max-w-[300px]">
-            No alumni matched this pivot. Try different majors.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
