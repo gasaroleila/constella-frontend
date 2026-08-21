@@ -1,17 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { generateMockSimulation } from "@/lib/mock-data";
+import { simulate } from "@/lib/api";
+import { useAuthStore } from "@/stores/auth";
 import type { TransitionSimulation } from "@/lib/types";
 
 export default function TransitionPage() {
-  const [fromMajor, setFromMajor] = useState("Economics");
-  const [toMajor, setToMajor] = useState("Public Health");
+  const token = useAuthStore((s) => s.token);
+  const [fromMajor, setFromMajor] = useState("");
+  const [toMajor, setToMajor] = useState("");
   const [simulation, setSimulation] = useState<TransitionSimulation | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSimulate = () => {
-    if (!fromMajor.trim() || !toMajor.trim()) return;
-    setSimulation(generateMockSimulation(fromMajor.trim(), toMajor.trim()));
+  const handleSimulate = async () => {
+    if (!fromMajor.trim() || !toMajor.trim() || !token) return;
+    setLoading(true);
+    setError("");
+    try {
+      const data = await simulate(token, { fromMajor: fromMajor.trim(), toMajor: toMajor.trim() });
+      setSimulation(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Simulation failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,13 +64,19 @@ export default function TransitionPage() {
           </div>
           <button
             onClick={handleSimulate}
-            disabled={!fromMajor.trim() || !toMajor.trim()}
+            disabled={!fromMajor.trim() || !toMajor.trim() || loading}
             className="px-6 py-2.5 rounded-lg bg-indigo text-white text-sm font-semibold hover:bg-indigo-bright transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-indigo"
           >
-            Simulate
+            {loading ? "Simulating..." : "Simulate"}
           </button>
         </div>
       </div>
+
+      {error && (
+        <div className="text-sm text-red-400 bg-space-card border border-border rounded-lg px-4 py-3">
+          {error}
+        </div>
+      )}
 
       {/* Summary bar */}
       {simulation && (
