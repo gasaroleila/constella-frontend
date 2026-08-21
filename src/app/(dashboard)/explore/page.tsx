@@ -34,14 +34,6 @@ export default function ExplorePage() {
   const [majorFilter, setMajorFilter] = useState("");
   const [careerArea, setCareerArea] = useState("");
 
-  // Applied filters (updated on "Explore Constellation" click)
-  const [appliedFilters, setAppliedFilters] = useState({
-    interests: ["Biology", "Public Health"],
-    careerArea: "",
-    major: "",
-    mode: "open" as "open" | "focused",
-  });
-
   // Saved paths
   const [savedPaths, setSavedPaths] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
@@ -54,8 +46,13 @@ export default function ExplorePage() {
   });
 
   const constellationData = useMemo(
-    () => filterConstellationData(mockConstellationData, appliedFilters),
-    [appliedFilters],
+    () => filterConstellationData(mockConstellationData, {
+      interests: [...selectedInterests],
+      careerArea,
+      major: majorFilter,
+      mode,
+    }),
+    [selectedInterests, careerArea, majorFilter, mode],
   );
 
   const legendItems = constellationData.clusters.map((c) => ({
@@ -90,16 +87,6 @@ export default function ExplorePage() {
       const last = [...selectedInterests].pop()!;
       removeInterest(last);
     }
-  };
-
-  const applyFilters = () => {
-    setAppliedFilters({
-      interests: [...selectedInterests],
-      careerArea,
-      major: majorFilter,
-      mode,
-    });
-    setSelectedAlumni(null);
   };
 
   const toggleSave = (id: string) => {
@@ -279,12 +266,6 @@ export default function ExplorePage() {
           </div>
         )}
 
-        <button
-          onClick={applyFilters}
-          className="mx-5 mb-5 py-2.5 rounded-lg bg-indigo text-white text-sm font-semibold hover:bg-indigo-bright transition-colors"
-        >
-          Explore Constellation
-        </button>
       </div>
 
       {/* Constellation canvas */}

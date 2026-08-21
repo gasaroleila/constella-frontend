@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/auth";
 
 const navItems = [
   {
@@ -55,20 +56,12 @@ const secondaryItems = [
       </svg>
     ),
   },
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-      </svg>
-    ),
-  },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useAuthStore((s) => s.logout);
 
   return (
     <nav className="w-[220px] h-screen shrink-0 bg-space border-r border-border flex flex-col py-5">
@@ -115,12 +108,23 @@ export function Sidebar() {
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo to-indigo-bright flex items-center justify-center text-[13px] font-bold text-white shrink-0">
           AJ
         </div>
-        <div className="min-w-0">
+        <div className="flex-1 min-w-0">
           <div className="text-[13px] font-semibold">Alex Johnson</div>
           <div className="text-[11px] text-text-tertiary truncate">
             University of Michigan
           </div>
         </div>
+        <button
+          onClick={() => { logout(); router.push("/login"); }}
+          title="Log out"
+          className="text-text-tertiary hover:text-text-primary transition-colors shrink-0"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-[18px] h-[18px]">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </button>
       </div>
     </nav>
   );

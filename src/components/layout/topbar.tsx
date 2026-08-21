@@ -8,7 +8,6 @@ const pageTitles: Record<string, string> = {
   "/explore": "Explore",
   "/transition": "Transition",
   "/create-path": "Create Path",
-  "/settings": "Settings",
 };
 
 export function Topbar() {
