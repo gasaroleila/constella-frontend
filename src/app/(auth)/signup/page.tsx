@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { signup } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { signup, getSchools, type School } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 
 export default function SignupPage() {
@@ -13,9 +13,16 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [schoolId, setSchoolId] = useState("");
+  const [schools, setSchools] = useState<School[]>([]);
+  const [year, setYear] = useState("freshman");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const setAuth = useAuthStore((s) => s.setAuth);
+
+  useEffect(() => {
+    getSchools().then(setSchools).catch(() => {});
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col justify-center px-9 max-w-[420px] mx-auto w-full">
@@ -67,7 +74,7 @@ export default function SignupPage() {
         setError("");
         setLoading(true);
         try {
-          const { token, student } = await signup({ firstName, lastName, email, password });
+          const { token, student } = await signup({ firstName, lastName, email, password, schoolId, year });
           setAuth(token, student);
           router.push("/dashboard");
         } catch (err) {
@@ -110,6 +117,34 @@ export default function SignupPage() {
             placeholder="alex@umich.edu"
             className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
           />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[13px] font-semibold text-text-secondary">School</span>
+          <select
+            required
+            value={schoolId}
+            onChange={(e) => setSchoolId(e.target.value)}
+            className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15 appearance-none cursor-pointer"
+          >
+            <option value="">Select your school</option>
+            {schools.map((s) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[13px] font-semibold text-text-secondary">Year</span>
+          <select
+            required
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="px-3.5 py-3 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15 appearance-none cursor-pointer"
+          >
+            <option value="freshman">Freshman</option>
+            <option value="sophomore">Sophomore</option>
+            <option value="junior">Junior</option>
+            <option value="senior">Senior</option>
+          </select>
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-[13px] font-semibold text-text-secondary">Password</span>
