@@ -80,7 +80,7 @@ export default function SignupPage() {
         setError("");
         setLoading(true);
         try {
-          const { token, student } = await signup({ firstName, lastName, email, password, schoolId: "demo_university", year });
+          const { token, student } = await signup({ firstName, lastName, email, password, schoolId: "demo-university", year });
           setAuth(token, student);
           router.push("/dashboard");
         } catch (err) {
