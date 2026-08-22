@@ -123,7 +123,7 @@ export default function TransitionPage() {
                   {card.fromMajor} &rarr; {card.toMajor}
                 </div>
                 <div className="text-[13px] text-text-secondary mt-1">
-                  {card.outcome}
+                  {card.careerOutcome.title}{card.careerOutcome.org ? ` @ ${card.careerOutcome.org}` : ""}
                 </div>
               </div>
               <div className="px-5 py-4">

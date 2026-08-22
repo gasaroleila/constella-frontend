@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { signup, getProfile, getSchools, type School } from "@/lib/api";
+import { signup, getSchools, type School } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 
 export default function SignupPage() {
@@ -73,9 +73,8 @@ export default function SignupPage() {
         setError("");
         setLoading(true);
         try {
-          const { token } = await signup({ firstName, lastName, email, password, schoolId });
-          const user = await getProfile(token);
-          setAuth(token, user);
+          const { token, student } = await signup({ firstName, lastName, email, password, schoolId });
+          setAuth(token, student);
           router.push("/dashboard");
         } catch (err) {
           setError(err instanceof Error ? err.message : "Signup failed");
@@ -138,10 +137,10 @@ export default function SignupPage() {
             <input
               type={showPassword ? "text" : "password"}
               required
-              minLength={6}
+              minLength={10}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Min. 6 characters"
+              placeholder="Min. 10 characters"
               className="w-full px-3.5 py-3 pr-11 rounded-[10px] border border-border bg-surface text-sm outline-none focus:border-indigo focus:ring-2 focus:ring-indigo/15"
             />
             <button

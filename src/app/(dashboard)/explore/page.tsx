@@ -346,7 +346,7 @@ export default function ExplorePage() {
               {selectedAlumni.majors.join(" + ")}
             </div>
             <div className="text-[13px] text-text-secondary">
-              {selectedAlumni.careerOutcome.title} @ {selectedAlumni.careerOutcome.industry}
+              {selectedAlumni.careerOutcome.title}{selectedAlumni.careerOutcome.org ? ` @ ${selectedAlumni.careerOutcome.org}` : ""}
             </div>
 
             {/* Save/Unsave button */}

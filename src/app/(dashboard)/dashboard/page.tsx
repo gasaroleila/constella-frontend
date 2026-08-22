@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DecorativeConstellation } from "@/components/constellation/decorative-constellation";
-import { getDashboardStats, type DashboardStats } from "@/lib/api";
+import { getDashboard } from "@/lib/api";
+import type { DashboardStats } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
 const MOCK_STATS: DashboardStats = {
   alumniMatches: 47,
-  clustersExplored: 5,
+  clusters: 5,
   highestMatch: 94,
   savedPaths: 8,
 };
@@ -20,10 +21,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!token) return;
-    getDashboardStats(token)
+    getDashboard(token)
       .then((data) => {
-        const hasData = data.alumniMatches > 0 || data.clustersExplored > 0;
-        setStats(hasData ? data : MOCK_STATS);
+        if (!data) return;
+        const hasData = data.stats.alumniMatches > 0 || data.stats.clusters > 0;
+        setStats(hasData ? data.stats : MOCK_STATS);
       })
       .catch(() => {});
   }, [token]);
@@ -46,7 +48,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-4 gap-3.5 mb-7">
         {[
           { label: "Alumni Matches", value: String(stats.alumniMatches), change: "" },
-          { label: "Clusters Explored", value: String(stats.clustersExplored), change: "" },
+          { label: "Clusters Explored", value: String(stats.clusters), change: "" },
           { label: "Highest Match", value: `${Math.round(stats.highestMatch)}%`, change: "" },
           { label: "Saved Paths", value: String(stats.savedPaths), change: "" },
         ].map((stat) => (

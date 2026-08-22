@@ -46,7 +46,7 @@ function makeAlumni(
       id: `${cluster.replace(/\s/g, "-").toLowerCase()}-${i}`,
       graduationYear: year,
       majors: m,
-      careerOutcome: { title: outcome, industry: cluster },
+      careerOutcome: { title: outcome, org: cluster, industry: cluster },
       coursesBySemester: {},
       interests: [],
       pivotPoints: hasPivot
@@ -159,12 +159,15 @@ export function generateMockSimulation(fromMajor: string, toMajor: string): Tran
   const cards: TransitionCard[] = Array.from({ length: cardCount }, (_, i) => {
     const pivotSem = pivotTimings[i % pivotTimings.length];
     return {
+      id: `mock-transition-${i}`,
       isTopMatch: i === 0,
       classYear: 2024 - i,
       matchPercent: Math.round(94 - i * 4 - Math.random() * 3),
       fromMajor,
       toMajor,
-      outcome: outcomes[i % outcomes.length],
+      pivotSemester: pivotSem,
+      pivotType: "switched",
+      careerOutcome: { title: outcomes[i % outcomes.length] },
       prePivotSummary: `Pre-pivot (${2 + i} semesters): ${fromMajor} 101, Stats, Intro ${fromMajor}`,
       timeline: [
         {
@@ -197,6 +200,8 @@ export function generateMockSimulation(fromMajor: string, toMajor: string): Tran
   });
 
   return {
+    fromMajor,
+    toMajor,
     totalTransitions,
     peakTiming: "sophomore and junior year",
     topOutcome: toMajor,

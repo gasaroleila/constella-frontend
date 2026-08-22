@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { login, getProfile } from "@/lib/api";
+import { login } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 
 export default function LoginPage() {
@@ -65,9 +65,8 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
         try {
-          const { token } = await login(email, password);
-          const user = await getProfile(token);
-          setAuth(token, user);
+          const { token, student } = await login(email, password);
+          setAuth(token, student);
           router.push("/dashboard");
         } catch (err) {
           setError(err instanceof Error ? err.message : "Login failed");
