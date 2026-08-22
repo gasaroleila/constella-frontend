@@ -77,7 +77,7 @@ export async function signup(data: {
   lastName: string;
   email: string;
   password: string;
-  schoolId: string;
+  schoolId?: string;
 }) {
   return request<{ token: string; student: StudentProfile }>("/api/students/register", {
     method: "POST",
