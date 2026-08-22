@@ -1,4 +1,4 @@
-# Constella
+# Constella Student Portal
 
 **Live demo:** [constella-view.vercel.app](https://constella-view.vercel.app)
 
