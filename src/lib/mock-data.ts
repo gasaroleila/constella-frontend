@@ -1,4 +1,4 @@
-import type { AlumniRecord, Cluster, ConstellationData, SavedPath, TransitionCard, TransitionSimulation } from "./types";
+import type { AlumniRecord, Cluster, ConstellationData, Course, SavedPath, TransitionCard, TransitionSimulation } from "./types";
 
 const clusterColors: Record<string, string> = {
   "Health Policy": "#34D399",
@@ -32,8 +32,60 @@ function makeAlumni(
     "Finance": ["Financial Analyst", "Investment Banker", "Risk Analyst", "Portfolio Manager"],
   };
 
+  const courses: Record<string, string[][]> = {
+    "Health Policy": [
+      ["Bio 101", "Chem 101", "Intro Psych"],
+      ["Organic Chem", "Anatomy", "Intro Public Health"],
+      ["Epidemiology", "Health Policy", "Biostatistics"],
+      ["Community Health", "Capstone: Health Equity", "Research Methods"],
+    ],
+    "UX Research": [
+      ["Intro Psych", "Design Fundamentals", "Stats I"],
+      ["Cognitive Psych", "HCI Intro", "Research Methods"],
+      ["User Research", "Design Thinking", "Data Viz"],
+      ["UX Capstone", "Cognitive Science Thesis", "Interaction Design"],
+    ],
+    "Data Science": [
+      ["Calc I", "Intro CS", "Stats I"],
+      ["Calc II", "Data Structures", "Prob Theory"],
+      ["Machine Learning", "Linear Algebra", "Applied Stats"],
+      ["Applied ML", "Big Data Systems", "CS Thesis"],
+    ],
+    "Biotech": [
+      ["Bio 101", "Chem 101", "Econ 101"],
+      ["Genetics", "Organic Chem", "Intro Business"],
+      ["Molecular Bio", "Entrepreneurship", "Cell Biology"],
+      ["Business Strategy", "Biotech Seminar", "Startup Lab"],
+    ],
+    "Education": [
+      ["Intro Psych", "English 101", "Sociology 101"],
+      ["Child Development", "Pedagogy", "Ed Psychology"],
+      ["Curriculum Design", "Classroom Management", "Special Ed"],
+      ["Student Teaching", "Ed Research", "Capstone"],
+    ],
+    "Finance": [
+      ["Econ 101", "Calc I", "Accounting 101"],
+      ["Micro", "Macro", "Financial Accounting"],
+      ["Investments", "Corporate Finance", "Econometrics"],
+      ["Portfolio Mgmt", "Risk Analysis", "Finance Capstone"],
+    ],
+  };
+
+  const interestPool: Record<string, string[]> = {
+    "Health Policy": ["Public Health", "Epidemiology", "Health Equity", "Global Health", "Bioethics"],
+    "UX Research": ["User Experience", "Cognitive Science", "Design", "Human Factors", "Accessibility"],
+    "Data Science": ["Machine Learning", "Statistics", "AI", "Data Viz", "Big Data"],
+    "Biotech": ["Genetics", "Entrepreneurship", "Drug Discovery", "Synthetic Biology", "Lab Research"],
+    "Education": ["Teaching", "EdTech", "Curriculum", "Child Development", "Literacy"],
+    "Finance": ["Investing", "Risk Management", "Fintech", "Economics", "Trading"],
+  };
+
+  const semesters = ["Freshman Fall", "Freshman Spring", "Sophomore Fall", "Sophomore Spring", "Junior Fall", "Junior Spring", "Senior Fall", "Senior Spring"];
+
   const clusterMajors = majors[cluster] || [["General Studies"]];
   const clusterOutcomes = outcomes[cluster] || ["Professional"];
+  const clusterCourses = courses[cluster] || [["Course 101"], ["Course 201"], ["Course 301"], ["Course 401"]];
+  const clusterInterests = interestPool[cluster] || ["Research"];
 
   return Array.from({ length: count }, (_, i) => {
     const m = clusterMajors[i % clusterMajors.length];
@@ -42,13 +94,42 @@ function makeAlumni(
     const year = baseYear - Math.floor(Math.random() * 4);
 
     const hasPivot = Math.random() > 0.5;
+
+    // Build coursesBySemester from the cluster's course pool
+    const coursesBySemester: Record<string, Course[]> = {};
+    clusterCourses.forEach((semCourses, si) => {
+      const fall = semesters[si * 2];
+      const spring = semesters[si * 2 + 1];
+      const mid = Math.ceil(semCourses.length / 2);
+      coursesBySemester[fall] = semCourses.slice(0, mid).map((name) => ({
+        id: name.toLowerCase().replace(/\s+/g, "-"),
+        name,
+        semester: fall,
+      }));
+      if (mid < semCourses.length) {
+        coursesBySemester[spring] = semCourses.slice(mid).map((name) => ({
+          id: name.toLowerCase().replace(/\s+/g, "-"),
+          name,
+          semester: spring,
+        }));
+      }
+    });
+
+    // Mark courses around pivot as new/dropped
+    if (hasPivot && coursesBySemester["Junior Fall"]) {
+      coursesBySemester["Junior Fall"] = coursesBySemester["Junior Fall"].map((c) => ({ ...c, status: "new" as const }));
+    }
+
+    // Pick 2-3 interests
+    const interests = clusterInterests.slice(i % 2, (i % 2) + 2 + (i % 2));
+
     return {
       id: `${cluster.replace(/\s/g, "-").toLowerCase()}-${i}`,
       graduationYear: year,
       majors: m,
       careerOutcome: { title: outcome, org: cluster, industry: cluster },
-      coursesBySemester: {},
-      interests: [],
+      coursesBySemester,
+      interests,
       pivotPoints: hasPivot
         ? [{ semester: "Junior Fall", fromMajor: m[0], toMajor: m[m.length - 1] }]
         : undefined,

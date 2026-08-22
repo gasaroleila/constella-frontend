@@ -30,7 +30,7 @@ export default function ExplorePage() {
   const [mode, setMode] = useState<"open" | "focused">("open");
   const [year, setYear] = useState("Sophomore");
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
-    new Set(["Biology", "Public Health"]),
+    new Set(["Economics"]),
   );
   const [interestQuery, setInterestQuery] = useState("");
   const [interestDropdownOpen, setInterestDropdownOpen] = useState(false);
