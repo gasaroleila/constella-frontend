@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { signup, getSchools, type School } from "@/lib/api";
+import { useState } from "react";
+import { signup } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 
 export default function SignupPage() {
@@ -14,15 +14,21 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [schoolId, setSchoolId] = useState("");
-  const [schools, setSchools] = useState<School[]>([]);
   const [year, setYear] = useState("freshman");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const setAuth = useAuthStore((s) => s.setAuth);
 
-  useEffect(() => {
-    getSchools().then(setSchools).catch(() => {});
-  }, []);
+  const schools = [
+    { id: "umich", name: "University of Michigan" },
+    { id: "stanford", name: "Stanford University" },
+    { id: "mit", name: "MIT" },
+    { id: "harvard", name: "Harvard University" },
+    { id: "berkeley", name: "UC Berkeley" },
+    { id: "columbia", name: "Columbia University" },
+    { id: "yale", name: "Yale University" },
+    { id: "princeton", name: "Princeton University" },
+  ];
 
   return (
     <div className="flex-1 flex flex-col justify-center px-9 max-w-[420px] mx-auto w-full">
@@ -74,7 +80,7 @@ export default function SignupPage() {
         setError("");
         setLoading(true);
         try {
-          const { token, student } = await signup({ firstName, lastName, email, password, schoolId, year });
+          const { token, student } = await signup({ firstName, lastName, email, password, schoolId: "demo", year });
           setAuth(token, student);
           router.push("/dashboard");
         } catch (err) {
